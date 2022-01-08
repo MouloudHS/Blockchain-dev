@@ -1,1 +1,1 @@
-# Blockchain-dev
+# Blockchain Development basic course
