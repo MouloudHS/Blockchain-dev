@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solidity - Intermediate level &mdash; Solidity Tutorial 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Solidity Tutorial
+            <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Solidity - Intermediate level</a><ul>
+<li><a class="reference internal" href="#storage-factory-example">Storage Factory Example</a><ul>
+<li><a class="reference internal" href="#implemeting-the-storage-factory">Implemeting the storage factory</a></li>
+<li><a class="reference internal" href="#inheritance">Inheritance</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fund-me">Fund Me</a><ul>
+<li><a class="reference internal" href="#a-simple-function-to-fund-your-smart-contract">A simple function to fund your smart contract</a></li>
+<li><a class="reference internal" href="#getting-external-data-with-chainlink">Getting external data with chainlink</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Solidity Tutorial</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Solidity - Intermediate level</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Solidity_Intermediate.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="solidity-intermediate-level">
+<h1>Solidity - Intermediate level<a class="headerlink" href="#solidity-intermediate-level" title="Permalink to this headline"></a></h1>
+<section id="storage-factory-example">
+<h2>Storage Factory Example<a class="headerlink" href="#storage-factory-example" title="Permalink to this headline"></a></h2>
+<section id="implemeting-the-storage-factory">
+<h3>Implemeting the storage factory<a class="headerlink" href="#implemeting-the-storage-factory" title="Permalink to this headline"></a></h3>
+<ul class="simple">
+<li><p>Let’s say now that we want to execute a contract from another contract that is written in another file. For this we use import. To illustrate this, we’re gonna create a simple storage smart contract to store people by name and age and map their names to their ages and then create another contract that executes this contract.</p></li>
+</ul>
+<ul class="simple">
+<li><p>Simple storage contract</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="k">pragma solidity</span><span class="w"> </span><span class="o">&gt;=</span><span class="k">0.6.0</span><span class="w"> </span><span class="o">&lt;</span><span class="k">0.9.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">SimpleStorage</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1">// We will define two functions for later use</span>
+<span class="w">        </span><span class="c1">// one to store a number and one to retrieve it</span>
+
+<span class="w">        </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">favNumber</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">store</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">_number</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span>favNumber<span class="w"> </span><span class="o">=</span><span class="w"> </span>_number<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">retrieve</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="kt">return</span><span class="w"> </span>favNumber<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">struct</span><span class="w"> </span><span class="nv">People</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="kt">string</span><span class="w"> </span><span class="nv">name</span><span class="p">;</span><span class="w"></span>
+<span class="w">                </span><span class="kt">uint</span><span class="w"> </span><span class="nv">age</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span>People<span class="p">[]</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>people<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>nameToAge<span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">addPerson</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="nv">memory</span><span class="w"> </span>_name<span class="p">,</span><span class="w"> </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">_age</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span>people<span class="p">.</span>push<span class="p">(</span>People<span class="p">({</span>name<span class="p">:</span>_name<span class="p">,</span><span class="w"> </span>age<span class="p">:</span>_age<span class="p">}));</span><span class="w"></span>
+<span class="w">                </span>nameToAge<span class="p">[</span>_name<span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>_age<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>This smart contract is saved to a file called SimpleStorage.sol</p></li>
+<li><p>Now we’re gonna create another smart contract. In this smart contract, we’re gonna simply import our SimpleStorage smart contract.</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="k">pragma solidity</span><span class="w"> </span><span class="o">&gt;=</span><span class="k">0.6.0</span><span class="w"> </span><span class="o">&lt;</span><span class="k">0.9.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;./SimpleStorage.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">StorageFactory</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>This way, we can see in REMIX that we can either deploy the imported smart contract (SimpleStorage) or the empty one (StorageFactory).</p></li>
+<li><p>What we wanna do is deploying the SimpleStorage smart contract from the StorageFactory smart contract. Hence, we have to create a function for that.</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="k">pragma solidity</span><span class="w"> </span><span class="o">&gt;=</span><span class="k">0.6.0</span><span class="w"> </span><span class="o">&lt;</span><span class="k">0.9.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;./SimpleStorage.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">StorageFactory</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">createSimpleStorageContract</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="c1">// We define a new variable of type SimpleStorage contract with a name (for example simpleStorage):</span>
+<span class="w">                </span>SimpleStorage<span class="w"> </span>simpleStorage<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span>SimpleStorage<span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Using these few lines of code, we are able to deploy a smart contract from another smart contract. The only remaining issue is that, using REMIX IDE for example with a javascript VM will show us that the contracts have been created and deployed but we can’t really read where those contracts are being created (Unlike if we we’re using a real network or a testnet, in this case, we can see our contracts on etherscan). To keep track of the SimpleStorage contract that we’ve deployed, we can use an array..</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">//SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">&gt;=</span><span class="k">0.6.0</span><span class="w"> </span><span class="o">&lt;</span><span class="k">0.9.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;./SimpleStorage.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">StorageFactory</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1">// To keep track of created contracts</span>
+<span class="w">        </span><span class="c1">// using REMIX IDE VM</span>
+<span class="w">        </span>SimpleStorage<span class="p">[]</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>simpleStorageArray<span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">createSimpleStorageContract</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="c1">// We define a new variable of type SimpleStorage contract with a name (for example simpleStorage):</span>
+<span class="w">                </span>SimpleStorage<span class="w"> </span>simpleStorage<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span>SimpleStorage<span class="p">();</span><span class="w"></span>
+
+<span class="w">                </span><span class="c1">// To keep track of created contracts</span>
+<span class="w">                </span><span class="c1">// using REMIX IDE VM</span>
+<span class="w">                </span>simpleStorageArray<span class="p">.</span>push<span class="p">(</span>simpleStorage<span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If we run this code snippet in a REMIX IDE with a JavaScript VM environement for example, we’re gonna get for each smart contract created by the <cite>createSimpleStorageContract</cite> an adress that the corresponding contract was deployed to. This way, we deployed a contract to the blockchain from another contract.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>We should always think of starting our code with a license identifier : <strong>SPDX-License-Identifier: MIT</strong></p></li>
+</ul>
+</div>
+<ul class="simple">
+<li><p>What we want to do in the next step is to call the function that are defined in the internal contract from the new contract. To achieve this, we have to create functions in our new contract to call other functions that are originally defined in the contract deployed contract.</p></li>
+</ul>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<ul class="simple">
+<li><p>To interact with a contract, we need two things; the adress of the contract we want to interact with and the ABI (Application Binary Interface).</p></li>
+<li><p>Since we are storing our deployed contracts in an array, each contract can be pointed to by its index in the array and we can interact with it through its adress.</p></li>
+</ul>
+</div>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.6.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;./SimpleStorage.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">StorageFactory</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span>SimpleStorage<span class="p">[]</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>simpleStorageArray<span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">createSimpleStorageContract</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span>SimpleStorage<span class="w"> </span>simpleStorage<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span>SimpleStorage<span class="p">();</span><span class="w"></span>
+<span class="w">                </span>simpleStorageArray<span class="p">.</span>push<span class="p">(</span>simpleStorage<span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1">// Function to call Store function of SimpleStorage</span>
+<span class="w">        </span><span class="c1">// we need to pass an index to point to a deployed contract in</span>
+<span class="w">        </span><span class="c1">// the array where all deployed contracts are (simpleStorageArray)</span>
+<span class="w">        </span><span class="c1">// We will also pass a number to be stored as required by</span>
+<span class="w">        </span><span class="c1">// the SimpleStorage store function</span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">sfStore</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">_simpleStorageIndex</span><span class="p">,</span><span class="w"> </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">_simpleStorageNumber</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="c1">// We can get the adress of a contract through the</span>
+<span class="w">                </span><span class="c1">// function adress(your_contract)</span>
+<span class="w">                </span><span class="c1">// We create simpleStorage object that we can use to</span>
+<span class="w">                </span><span class="c1">// call any function in the SimpleStorage contract</span>
+<span class="w">                </span>SimpleStorage<span class="w"> </span>simpleStorage<span class="w"> </span><span class="o">=</span><span class="w"> </span>SimpleStorage<span class="p">(</span><span class="kt">address</span><span class="p">(</span>simpleStorageArray<span class="p">[</span>_simpleStorageIndex<span class="p">]));</span><span class="w"></span>
+<span class="w">                </span>simpleStorage<span class="p">.</span>store<span class="p">(</span>_simpleStorageNumber<span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">sfRetrieve</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">_simpleStorageIndex</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span>SimpleStorage<span class="w"> </span>simpleStorage<span class="w"> </span><span class="o">=</span><span class="w"> </span>SimpleStorage<span class="p">(</span><span class="kt">address</span><span class="p">(</span>simpleStorageArray<span class="p">[</span>_simpleStorageIndex<span class="p">]));</span><span class="w"></span>
+<span class="w">                </span><span class="kt">return</span><span class="w"> </span>simpleStorage<span class="p">.</span>retrieve<span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="inheritance">
+<h3>Inheritance<a class="headerlink" href="#inheritance" title="Permalink to this headline"></a></h3>
+<ul class="simple">
+<li><p>So far, all looks good, but what if we had too many functions inside SimpleStorage contract and we wanted to use all of them inside our StorageFactory ?</p></li>
+<li><p>Inheritance solves this problem: StorageFactory can inherit all the functions of SimpleStorage.</p></li>
+<li><p>In solidity, we simply define our StorageFactory to be of “contract” SimpleStorage. (similar to saying of “type” or of “class” in any other programming language). To do so, we use <strong>is</strong> <code class="docutils literal notranslate"><span class="pre">contract</span> <span class="pre">StorageFactory</span> <span class="pre">is</span> <span class="pre">SimpleStorage</span> <span class="pre">{</span> <span class="pre">//</span> <span class="pre">lines-of-code;</span> <span class="pre">}</span></code>. This is enough to have all the functions that are defined in SimpleStorage imported in the StorageFactory and ready to be used.</p></li>
+<li><p>The code becomes;</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.6.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;./SimpleStorage.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">StorageFactory</span><span class="w"> </span><span class="kt">is</span><span class="w"> </span>SimpleStorage<span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span>SimpleStorage<span class="p">[]</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>simpleStorageArray<span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">createSimpleStorageContract</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span>SimpleStorage<span class="w"> </span>simpleStorage<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span>SimpleStorage<span class="p">();</span><span class="w"></span>
+<span class="w">                </span>simpleStorageArray<span class="p">.</span>push<span class="p">(</span>simpleStorage<span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1">// Function to call Store function of SimpleStorage</span>
+<span class="w">        </span><span class="c1">// we need to pass an index to point to a deployed contract in</span>
+<span class="w">        </span><span class="c1">// the array where all deployed contracts are (simpleStorageArray)</span>
+<span class="w">        </span><span class="c1">// We will also pass a number to be stored as required by</span>
+<span class="w">        </span><span class="c1">// the SimpleStorage store function</span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">sfStore</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">_simpleStorageIndex</span><span class="p">,</span><span class="w"> </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">_simpleStorageNumber</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="c1">// We can get the adress of a contract through the</span>
+<span class="w">                </span><span class="c1">// function adress(your_contract)</span>
+<span class="w">                </span><span class="c1">// We create simpleStorage object that we can use to</span>
+<span class="w">                </span><span class="c1">// call any function in the SimpleStorage contract</span>
+<span class="w">                </span>SimpleStorage<span class="w"> </span>simpleStorage<span class="w"> </span><span class="o">=</span><span class="w"> </span>SimpleStorage<span class="p">(</span><span class="kt">address</span><span class="p">(</span>simpleStorageArray<span class="p">[</span>_simpleStorageIndex<span class="p">]));</span><span class="w"></span>
+<span class="w">                </span>simpleStorage<span class="p">.</span>store<span class="p">(</span>_simpleStorageNumber<span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">sfRetrieve</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">_simpleStorageIndex</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span>SimpleStorage<span class="w"> </span>simpleStorage<span class="w"> </span><span class="o">=</span><span class="w"> </span>SimpleStorage<span class="p">(</span><span class="kt">address</span><span class="p">(</span>simpleStorageArray<span class="p">[</span>_simpleStorageIndex<span class="p">]));</span><span class="w"></span>
+<span class="w">                </span><span class="kt">return</span><span class="w"> </span>simpleStorage<span class="p">.</span>retrieve<span class="p">();</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>That was all for the storage example.</strong></p></li>
+</ul>
+</section>
+</section>
+<section id="fund-me">
+<h2>Fund Me<a class="headerlink" href="#fund-me" title="Permalink to this headline"></a></h2>
+<section id="a-simple-function-to-fund-your-smart-contract">
+<h3>A simple function to fund your smart contract<a class="headerlink" href="#a-simple-function-to-fund-your-smart-contract" title="Permalink to this headline"></a></h3>
+<ul class="simple">
+<li><p>In case we want to create payable functions, we should use the keyword <code class="docutils literal notranslate"><span class="pre">payable</span></code>.</p></li>
+<li><p>The code below is a simple implementation of a payable function.</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-Licence-Identifier: MIT</span>
+
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.6.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">FundMe</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">fund</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Let’s say for example that we want to keep track of who sent us funding using this contract: To do so, we can create a mapping between adresses and value.</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-Licence-Identifier: MIT</span>
+
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.6.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">FundMe</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>adressToAmountFunded<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">fund</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="c1">// msg.sender is the sender of the function call.</span>
+<span class="w">                </span><span class="c1">// msg.value is how much they sent.</span>
+<span class="w">            </span><span class="c1">// += to cumulate the amounts sent</span>
+<span class="w">            </span>adressToAmountFunded<span class="p">[</span><span class="k">msg.sender</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">msg.value</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="getting-external-data-with-chainlink">
+<h3>Getting external data with chainlink<a class="headerlink" href="#getting-external-data-with-chainlink" title="Permalink to this headline"></a></h3>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Mouloud Bahae eddine.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
