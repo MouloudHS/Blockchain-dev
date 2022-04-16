@@ -57,6 +57,11 @@
 <li><a class="reference internal" href="#getting-external-data-with-chainlink">Getting external data with chainlink</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#working-with-interfaces">Working with interfaces</a></li>
+<li><a class="reference internal" href="#matching-units">Matching units</a></li>
+<li><a class="reference internal" href="#thresholding">Thresholding</a></li>
+<li><a class="reference internal" href="#ownership">Ownership</a></li>
+<li><a class="reference internal" href="#modifiers-and-resetting">Modifiers and resetting</a></li>
 </ul>
 </li>
 </ul>
@@ -89,6 +94,9 @@
 <h1>Introduction to Solidity<a class="headerlink" href="#introduction-to-solidity" title="Permalink to this headline"></a></h1>
 <section id="what-is-solidity">
 <h2>What is Solidity ?<a class="headerlink" href="#what-is-solidity" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Solidity is an object-oriented, high-level language for implementing smart contracts. Smart contracts are programs which govern the behaviour of accounts within the Ethereum state.</p></li>
+</ul>
 </section>
 <section id="quick-intro-to-coding-with-solidity">
 <h2>Quick intro to coding with solidity<a class="headerlink" href="#quick-intro-to-coding-with-solidity" title="Permalink to this headline"></a></h2>
@@ -600,7 +608,7 @@ People<span class="p">[]</span><span class="w"> </span><span class="kt">public</
 <section id="getting-external-data-with-chainlink">
 <h3>Getting external data with chainlink<a class="headerlink" href="#getting-external-data-with-chainlink" title="Permalink to this headline"></a></h3>
 <ul class="simple">
-<li><p>Blockchains being deterministic systems, we may encounter a slight problem. Let’s say that we want for example to receive our funds in USDT or any other currency instead of Ether. What we need is a conversion rate between Ether and this whatever currency is. However, blockchains by themselves cannot interact with the real world and this is where oracles come into place.</p></li>
+<li><p>Blockchains being deterministic systems, we may encounter a slight problem. Let’s say that we want for example to receive our funds in USDT or any other currency instead of Ether. What we need is a conversion rate between Ether and this whatever currency. However, blockchains by themselves cannot interact with the real world and this is where oracles come into place.</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -613,8 +621,673 @@ People<span class="p">[]</span><span class="w"> </span><span class="kt">public</
 </ul>
 <ul class="simple">
 <li><p>CHAINLINK is a modular oracle network that allows us to get data and do external computation in a highly sybil-resistant decentralized manner.</p></li>
+<li><p>Let’s <strong>Get the latest price feed</strong>. We can use chainlink’s <code class="docutils literal notranslate"><span class="pre">get</span> <span class="pre">latest</span> <span class="pre">price</span> <span class="pre">feed</span></code> contract (<a class="reference external" href="https://docs.chain.link/docs/get-the-latest-price/">Get latest price</a>).</p></li>
+<li><p>There is a Remix button that takes us directly to REMIX IDE.</p></li>
+<li><p>When following the previous link, we get to see a foler created in REMIX with the following code and other things as well:</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.8.7</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">PriceConsumerV3</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span>AggregatorV3Interface<span class="w"> </span><span class="kt">internal</span><span class="w"> </span>priceFeed<span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Network: Kovan</span>
+<span class="cm">         * Aggregator: ETH/USD</span>
+<span class="cm">         * Address: 0x9326BFA02ADD2366b30bacB125260Af641031331</span>
+<span class="cm">         */</span><span class="w"></span>
+<span class="w">        </span><span class="kt">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x9326BFA02ADD2366b30bacB125260Af641031331</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Returns the latest price</span>
+<span class="cm">         */</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getLatestPrice</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="p">(</span><span class="w"></span>
+<span class="w">                </span><span class="cm">/*uint80 roundID*/</span><span class="p">,</span><span class="w"> </span><span class="c1">// Defines how many times this price was updated</span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="nv">price</span><span class="p">,</span><span class="w"> </span><span class="c1">// The actual conversion rate</span>
+<span class="w">                </span><span class="cm">/*uint startedAt*/</span><span class="p">,</span><span class="w"> </span><span class="c1">// Defines where this was last updated</span>
+<span class="w">                </span><span class="cm">/*uint timeStamp*/</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="cm">/*uint80 answeredInRound*/</span><span class="w"></span>
+<span class="w">            </span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>priceFeed<span class="p">.</span>latestRoundData<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span>price<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<ul>
+<li><p>As we can see, this contract requires a kovan faucet so in REMIX IDE, we should switch to injected web3 in order to use this contract and we should make sure that our connected wallet from metamask is a kovan testnet wallet.</p></li>
+<li><p>Once we deploy this, we can have live conversion rates through <code class="docutils literal notranslate"><span class="pre">get_latest_price</span></code> function of this contract.</p></li>
+<li><p>The reason why we cannot use a local network (simulated VM) and we use testnets is that, in a testnet, there is a network of nodes looking at this testnet and delivering data onto this testnet unlike in a simulated VM where there are no nodes. (However, we should note that there are ways to mock these interactions and mock a chainlink node returning data onto our blockchain.)</p></li>
+<li><p><strong>In order to incorporate this ethusd conversion rate datafeed into our code</strong>, we have to import the chainlink <strong>eth-usd</strong> datafeed from the npm package <code class="docutils literal notranslate"><span class="pre">&#64;chainlink/contracts</span></code>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Syntaxe:      <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">&quot;&#64;chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface&quot;</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>As we can see, the imported is actually an interfaceand not a contract. To learn about interfaces, we will copy paste the interface code <code class="docutils literal notranslate"><span class="pre">AggregatorV3Interface.sol</span></code> from the github repository rather than simply importing it in a one line of code.</p></li>
 </ul>
 </section>
+</section>
+<section id="working-with-interfaces">
+<h2>Working with interfaces<a class="headerlink" href="#working-with-interfaces" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>The following is an example of an interface, this is <code class="docutils literal notranslate"><span class="pre">AggregatorV3Interface.sol</span></code> interface.</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.8.0</span><span class="p">;</span><span class="w"></span>
+
+interface<span class="w"> </span>AggregatorV3Interface<span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="kt">function</span><span class="w"> </span><span class="nv">decimals</span><span class="p">()</span><span class="w"> </span><span class="kt">external</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">uint8</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">  </span><span class="kt">function</span><span class="w"> </span><span class="nv">description</span><span class="p">()</span><span class="w"> </span><span class="kt">external</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="nv">memory</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">  </span><span class="kt">function</span><span class="w"> </span><span class="nv">version</span><span class="p">()</span><span class="w"> </span><span class="kt">external</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">uint256</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">  </span><span class="c1">// getRoundData and latestRoundData should both raise &quot;No data present&quot;</span>
+<span class="w">  </span><span class="c1">// if they do not have data to report, instead of returning unset values</span>
+<span class="w">  </span><span class="c1">// which could be misinterpreted as actual reported values.</span>
+<span class="w">  </span><span class="kt">function</span><span class="w"> </span><span class="nv">getRoundData</span><span class="p">(</span><span class="kt">uint80</span><span class="w"> </span><span class="nv">_roundId</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="kt">external</span><span class="w"></span>
+<span class="w">        </span>view<span class="w"></span>
+<span class="w">        </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="kt">uint80</span><span class="w"> </span><span class="nv">roundId</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">startedAt</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">updatedAt</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kt">uint80</span><span class="w"> </span><span class="nv">answeredInRound</span><span class="w"></span>
+<span class="w">        </span><span class="p">);</span><span class="w"></span>
+
+<span class="w">  </span><span class="kt">function</span><span class="w"> </span><span class="nv">latestRoundData</span><span class="p">()</span><span class="w"></span>
+<span class="w">        </span><span class="kt">external</span><span class="w"></span>
+<span class="w">        </span>view<span class="w"></span>
+<span class="w">        </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="kt">uint80</span><span class="w"> </span><span class="nv">roundId</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">startedAt</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">updatedAt</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="kt">uint80</span><span class="w"> </span><span class="nv">answeredInRound</span><span class="w"></span>
+<span class="w">        </span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>An interface starts with <code class="docutils literal notranslate"><span class="pre">interface</span></code> keyword rather than <code class="docutils literal notranslate"><span class="pre">contract</span></code>.</p></li>
+<li><p>They are a minimalistic view into another contract and have function declarations and their return types only. They are similar to header files in C.</p></li>
+<li><p>Interfaces generally contains empty “external” functions that we can call from another contract.</p></li>
+<li><p>Solidity doesn’t natively understands how to interact with another contract. We have to tell Solidity what functions can be called on another contract.</p></li>
+<li><p>Interface compile down to ABI (Application binary interface). The ABI tells solidity what functions can be called on another contract.</p></li>
+<li><p>Anytime we need to interact with an <strong>already deployed contract</strong>, we need that contract’s ABI to do so.</p></li>
+</ul>
+</div>
+<ul class="simple">
+<li><p>In the following example, we’re going to interact, from a contract, with the previously defined interface.</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.8.0</span><span class="p">;</span><span class="w"></span>
+
+interface<span class="w"> </span>AggregatorV3Interface<span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">decimals</span><span class="p">()</span><span class="w"> </span><span class="kt">external</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">uint8</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">description</span><span class="p">()</span><span class="w"> </span><span class="kt">external</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="nv">memory</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">version</span><span class="p">()</span><span class="w"> </span><span class="kt">external</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">uint256</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1">// getRoundData and latestRoundData should both raise &quot;No data present&quot;</span>
+<span class="w">        </span><span class="c1">// if they do not have data to report, instead of returning unset values</span>
+<span class="w">        </span><span class="c1">// which could be misinterpreted as actual reported values.</span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getRoundData</span><span class="p">(</span><span class="kt">uint80</span><span class="w"> </span><span class="nv">_roundId</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="kt">external</span><span class="w"></span>
+<span class="w">        </span>view<span class="w"></span>
+<span class="w">        </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint80</span><span class="w"> </span><span class="nv">roundId</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">startedAt</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">updatedAt</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint80</span><span class="w"> </span><span class="nv">answeredInRound</span><span class="w"></span>
+<span class="w">        </span><span class="p">);</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">latestRoundData</span><span class="p">()</span><span class="w"></span>
+<span class="w">        </span><span class="kt">external</span><span class="w"></span>
+<span class="w">        </span>view<span class="w"></span>
+<span class="w">        </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint80</span><span class="w"> </span><span class="nv">roundId</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,</span><span class="w"> </span><span class="c1">// latest price</span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">startedAt</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">updatedAt</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint80</span><span class="w"> </span><span class="nv">answeredInRound</span><span class="w"></span>
+<span class="w">        </span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">FundMe</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+
+<span class="w">        </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>addressToAmountFunded<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">fund</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>addressToAmountFunded<span class="p">[</span><span class="k">msg.sender</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">msg.value</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1">// Calling &quot;version&quot; function &quot;referenced ?&quot; in the</span>
+<span class="w">        </span><span class="c1">// interface (and hence already alive in a deployed smart</span>
+<span class="w">        </span><span class="c1">// contract that is going to provide us with the eth/usd</span>
+<span class="w">        </span><span class="c1">// conversion rate) inside the contract.</span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getVersion</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1">// Same as arrays, structs etc: ...</span>
+<span class="w">            </span><span class="c1">// It&#39;s like defining a type</span>
+<span class="w">            </span><span class="c1">// public isn&#39;t necessary here as we already are in</span>
+<span class="w">            </span><span class="c1">// a public function</span>
+<span class="w">            </span><span class="c1">// We&#39;re gonna use rinkeby testnet in this example</span>
+<span class="w">            </span><span class="c1">// the address that we&#39;re going to pass to AggregatorV3Interface</span>
+<span class="w">            </span><span class="c1">// is a rinkeby testnet eth/usd pricefeed address</span>
+<span class="w">                </span>AggregatorV3Interface<span class="w"> </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x8A753747A1Fa494EC906cE90E9f37563A8AF630e</span><span class="p">);</span><span class="w"></span>
+<span class="w">                </span><span class="kt">return</span><span class="w"> </span>priceFeed<span class="p">.</span>version<span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1">// Let&#39;s create now a function called getPrice to get the latest price</span>
+<span class="w">        </span><span class="c1">// of ETH in usd, that is the eth/usd conversion rate.</span>
+<span class="w">        </span><span class="c1">// This time, the latestRoundData function returns a tuple (See the note</span>
+<span class="w">        </span><span class="c1">// below the code snippet)</span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getPrice</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>AggregatorV3Interface<span class="w"> </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x8A753747A1Fa494EC906cE90E9f37563A8AF630e</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">(</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint80</span><span class="w"> </span><span class="nv">roundId</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">startedAt</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">updatedAt</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint80</span><span class="w"> </span><span class="nv">answeredInRound</span><span class="w"></span>
+<span class="w">            </span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>priceFeed<span class="p">.</span>latestRoundData<span class="p">();</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1">// Since answer is int256, we will do a typecasting to get over the</span>
+<span class="w">            </span><span class="c1">// compiling error saying that we cannot return uint256 since</span>
+<span class="w">            </span><span class="c1">// answer is int256</span>
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span><span class="kt">uint256</span><span class="p">(</span>answer<span class="p">);</span><span class="w"></span>
+
+<span class="w">            </span><span class="cm">/* Note: there are alot of unused variables (roundId etc....) which causes</span>
+<span class="cm">            compiling errors... In order to be able to compile correctly, one has to</span>
+<span class="cm">            use a slighlty different syntax, namely, we can simply return blanks for</span>
+<span class="cm">            each unused variable:</span>
+<span class="cm">            (,int256 answer,,,) = priceFeed.latestRoundData();</span>
+<span class="cm">            */</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>A tuple is, in solidity, a list of objects that are potentially of different types. To define tuples, we use brackets.</p></li>
+</ul>
+</div>
+<ul class="simple">
+<li><p>To wrap this up, and since we learned now how to deal with interfaces, we can clean our code a bit to look much nicer by simply importing the AggregatorV3Interface from chainlink npm package and ignoring the unused vars in the latestRoundData() method. The code will look like this:</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.8.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">FundMe</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>amountToaddress<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">fund</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>amountToaddress<span class="p">[</span><span class="k">msg.sender</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">msg.value</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getPrice</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>AggregatorV3Interface<span class="w"> </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x8A753747A1Fa494EC906cE90E9f37563A8AF630e</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">(,</span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,,,)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>priceFeed<span class="p">.</span>latestRoundData<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span><span class="kt">uint256</span><span class="p">(</span>answer<span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="matching-units">
+<h2>Matching units<a class="headerlink" href="#matching-units" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>When we work with smart contracts, we generally encounter some issues regarding the units when we do some conversions. That being said, it’s preferable to work with units of ether like <strong>Wei</strong> and <strong>Gwei</strong>. In the last contract for example, we may want to multiply our answer by a power of 10 so that we make sure to always have 18 decimal places. (4,5454,4554 -&gt; 4,5454,4554 * 1,0000,0000,00 = 4,5454,4554,0000,0000,00 =&gt; (18 decimal places) which is 4.5 ether in wei (divide by 10^18 and you’ll get it)).</p></li>
+<li><p>Let’s define a <code class="docutils literal notranslate"><span class="pre">getConversionRate()</span></code> function.</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.8.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">FundMe</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>amountToaddress<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">fund</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>amountToaddress<span class="p">[</span><span class="k">msg.sender</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">msg.value</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getPrice</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>AggregatorV3Interface<span class="w"> </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x8A753747A1Fa494EC906cE90E9f37563A8AF630e</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">(,</span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,,,)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>priceFeed<span class="p">.</span>latestRoundData<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span><span class="kt">uint256</span><span class="p">(</span>answer<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10000000000</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getConversionRate</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmount</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="c1">// get Eth price:</span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethPrice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>getPrice<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="c1">// Convert **without forgetting to match all units</span>
+<span class="w">            </span><span class="c1">// with wei [ Divide by 10^18 (10^8 from</span>
+<span class="w">            </span><span class="c1">// ethAmount and 10^10 from ethPrice) ]**</span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmountToUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>ethPrice<span class="o">*</span>ethAmount<span class="p">)</span><span class="o">/</span><span class="m m-Decimal">1000000000000000000</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span>ethAmountToUSD<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>Solidity has a pitfall when it comes to maths. For example, a uint8 has as maximum 255, if we define a uint8 that is equal to 255 + 1, Solidity will wrap around once we reach the maximum cap, so we get: 255 + 1 = 0, 255 + 55 = 54 and so on… which is actually wrong. This is what we call overflow in solidity and we should really be careful with it.</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>There is a library in chainlink called <strong>SafeMathChainlink.sol</strong> that implements some math operations to be used to render warning messages when we encounter overflows. It should be used very often. However, Starting from Solidity v0.8, we no longer need SafeMath packages.</p></li>
+</ul>
+</div>
+<ul class="simple">
+<li><p>In the example below, we use Chainlink’s SafeMath library for uint256 varibale types only:</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.6.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">FundMe</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span>using<span class="w"> </span>SafeMathChainlink<span class="w"> </span><span class="kt">for</span><span class="w"> </span><span class="kt">uint256</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>amountToaddress<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">fund</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>amountToaddress<span class="p">[</span><span class="k">msg.sender</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">msg.value</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getPrice</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>AggregatorV3Interface<span class="w"> </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x8A753747A1Fa494EC906cE90E9f37563A8AF630e</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">(,</span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,,,)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>priceFeed<span class="p">.</span>latestRoundData<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span><span class="kt">uint256</span><span class="p">(</span>answer<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10000000000</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getConversionRate</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmount</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethPrice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>getPrice<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmountToUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>ethPrice<span class="o">*</span>ethAmount<span class="p">)</span><span class="o">/</span><span class="m m-Decimal">1000000000000000000</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span>ethAmountToUSD<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The directive <code class="docutils literal notranslate"><span class="pre">using</span> <span class="pre">A</span> <span class="pre">for</span> <span class="pre">B</span></code> can be used to attach library functions (from the library A) to any type (B) in the context of a contract.</p></li>
+</ul>
+</div>
+</section>
+<section id="thresholding">
+<h2>Thresholding<a class="headerlink" href="#thresholding" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Let’s set a threshold to the amount of Eth the sender sends us through this contract.</p></li>
+<li><dl class="simple">
+<dt>In order to do so, we have 2 options;</dt><dd><ul>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">require</span></code> keyword which is highly recommended: <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(getConversionRate(msg.value)</span> <span class="pre">&lt;</span> <span class="pre">minUSD)</span> <span class="pre">{</span> <span class="pre">revert?</span> <span class="pre">};</span></code></p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">-</span> <span class="pre">revert</span></code>:  <code class="docutils literal notranslate"><span class="pre">require(getConversionRate(msg.value)</span> <span class="pre">&gt;=</span> <span class="pre">minUSD);</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>These 2 lines are equivalent, they both stop the contract from executing if the requirement isn’t satisfied and revert the transaction =&gt; The user is going to receive his money back as well as any unspent gas.</p></li>
+<li><p>We can add a revert error message: <code class="docutils literal notranslate"><span class="pre">require(getConversionRate(msg.value)</span> <span class="pre">&gt;=</span> <span class="pre">minUSD,</span> <span class="pre">&quot;You</span> <span class="pre">need</span> <span class="pre">to</span> <span class="pre">spend</span> <span class="pre">more</span> <span class="pre">ETH</span> <span class="pre">!&quot;);</span></code></p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.6.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">FundMe</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span>using<span class="w"> </span>SafeMathChainlink<span class="w"> </span><span class="kt">for</span><span class="w"> </span><span class="kt">uint256</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>amountToaddress<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">fund</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">minUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m m-Decimal">50</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10</span><span class="o">**</span><span class="m m-Decimal">18</span><span class="p">;</span><span class="w"></span>
+<span class="w">            </span><span class="kt">require</span><span class="p">(</span>getConversionRate<span class="p">(</span><span class="k">msg.value</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span>minUSD<span class="p">,</span><span class="w"> </span><span class="s2">&quot;You need to spend at least 50 dollars in ETH !&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span>amountToaddress<span class="p">[</span><span class="k">msg.sender</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">msg.value</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getPrice</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>AggregatorV3Interface<span class="w"> </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x8A753747A1Fa494EC906cE90E9f37563A8AF630e</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">(,</span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,,,)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>priceFeed<span class="p">.</span>latestRoundData<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span><span class="kt">uint256</span><span class="p">(</span>answer<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10000000000</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getConversionRate</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmount</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethPrice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>getPrice<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmountToUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>ethPrice<span class="o">*</span>ethAmount<span class="p">)</span><span class="o">/</span><span class="m m-Decimal">1000000000000000000</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span>ethAmountToUSD<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<ul>
+<li><p>We can also add a function to withdraw the funds which is also a <code class="docutils literal notranslate"><span class="pre">payable</span></code> function. The keywords and functions that we are going to need are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">transfer()</span></code>: a method to transfer funds between two addresses.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">this</span></code> to refer to the current contract.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">balance</span></code> attribute to see the balance in ether of a contract. (In this example, we are going to withdraw all of the contract’s funds hence the <code class="docutils literal notranslate"><span class="pre">balance</span></code> attribute.)</p></li>
+<li><p>Putting everything together: <code class="docutils literal notranslate"><span class="pre">msg.sender.transfer(address(this).balance)</span></code>– This line of code means; <strong>whoever is calling the withdraw method (which is msg.sender), transfer them all of the contract’s code.</strong></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.6.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">FundMe</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span>using<span class="w"> </span>SafeMathChainlink<span class="w"> </span><span class="kt">for</span><span class="w"> </span><span class="kt">uint256</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>amountToaddress<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">fund</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">minUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m m-Decimal">50</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10</span><span class="o">**</span><span class="m m-Decimal">18</span><span class="p">;</span><span class="w"></span>
+<span class="w">            </span><span class="kt">require</span><span class="p">(</span>getConversionRate<span class="p">(</span><span class="k">msg.value</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span>minUSD<span class="p">,</span><span class="w"> </span><span class="s2">&quot;You need to spend at least 50 dollars in ETH !&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span>amountToaddress<span class="p">[</span><span class="k">msg.sender</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">msg.value</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getPrice</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>AggregatorV3Interface<span class="w"> </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x8A753747A1Fa494EC906cE90E9f37563A8AF630e</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">(,</span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,,,)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>priceFeed<span class="p">.</span>latestRoundData<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span><span class="kt">uint256</span><span class="p">(</span>answer<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10000000000</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getConversionRate</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmount</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethPrice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>getPrice<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmountToUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>ethPrice<span class="o">*</span>ethAmount<span class="p">)</span><span class="o">/</span><span class="m m-Decimal">1000000000000000000</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span>ethAmountToUSD<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">withdraw</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="k">msg.sender</span><span class="p">.</span>transfer<span class="p">(</span><span class="kt">address</span><span class="p">(</span><span class="kt">this</span><span class="p">).</span>balance<span class="p">);</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="ownership">
+<h2>Ownership<a class="headerlink" href="#ownership" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>It is a <strong>very bad idea</strong> to define a contract with a public withdrawal function. Only the owner should be able to withdraw funds from a smart contract. We hence have to declare an “owner”.</p></li>
+<li><p>In order to declare an owner to this smart contract, we maybe have to create a <code class="docutils literal notranslate"><span class="pre">createOwner</span></code> function to do the trick for us. However, this function can be called once the contract is deployed, so, if someone calls this function before we do once it is deployed, we are no longer the owners. Therefore, we need some sort of function that executes once the contract is deployed, and that’s what a <code class="docutils literal notranslate"><span class="pre">contructor</span></code> is ! It is what constructs the smart contruct.</p></li>
+<li><p>We can hence, declare a variable called <code class="docutils literal notranslate"><span class="pre">owner</span></code>, and use the constructor to define the owner to be us, thus, <code class="docutils literal notranslate"><span class="pre">msg.sender</span></code> as <strong>the first</strong> <code class="docutils literal notranslate"><span class="pre">msg.sender</span></code> is whoever deployed the contract which in this case is us.</p></li>
+<li><p>Once we define the owner, we can set a requirement through <code class="docutils literal notranslate"><span class="pre">require()</span></code> in the withdraw function.</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.6.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">FundMe</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span>using<span class="w"> </span>SafeMathChainlink<span class="w"> </span><span class="kt">for</span><span class="w"> </span><span class="kt">uint256</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>amountToaddress<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">address</span><span class="w"> </span><span class="k">public </span><span class="nv">owner</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">constructor</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>owner<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">msg.sender</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">fund</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">minUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m m-Decimal">50</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10</span><span class="o">**</span><span class="m m-Decimal">18</span><span class="p">;</span><span class="w"></span>
+<span class="w">            </span><span class="kt">require</span><span class="p">(</span>getConversionRate<span class="p">(</span><span class="k">msg.value</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span>minUSD<span class="p">,</span><span class="w"> </span><span class="s2">&quot;You need to spend at least 50 dollars in ETH !&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span>amountToaddress<span class="p">[</span><span class="k">msg.sender</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">msg.value</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getPrice</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>AggregatorV3Interface<span class="w"> </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x8A753747A1Fa494EC906cE90E9f37563A8AF630e</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">(,</span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,,,)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>priceFeed<span class="p">.</span>latestRoundData<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span><span class="kt">uint256</span><span class="p">(</span>answer<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10000000000</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getConversionRate</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmount</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethPrice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>getPrice<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmountToUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>ethPrice<span class="o">*</span>ethAmount<span class="p">)</span><span class="o">/</span><span class="m m-Decimal">1000000000000000000</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span>ethAmountToUSD<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">withdraw</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="kt">require</span><span class="p">(</span><span class="k">msg.sender</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>owner<span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="k">msg.sender</span><span class="p">.</span>transfer<span class="p">(</span><span class="kt">address</span><span class="p">(</span><span class="kt">this</span><span class="p">).</span>balance<span class="p">);</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="modifiers-and-resetting">
+<h2>Modifiers and resetting<a class="headerlink" href="#modifiers-and-resetting" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Let’s say we have many contracts to be run and many functions that are only for the owner to use. Do we have to repeat this require statement each time ? The answer is no, but instead we can use a <code class="docutils literal notranslate"><span class="pre">modifier</span></code>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>A modifier is used to change the behavior of a function in a declarative way.</p></li>
+</ul>
+</div>
+<ul class="simple">
+<li><p>In the example below, we are going to modify our last code to use a modifier:</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.6.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">FundMe</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span>using<span class="w"> </span>SafeMathChainlink<span class="w"> </span><span class="kt">for</span><span class="w"> </span><span class="kt">uint256</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>amountToaddress<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">address</span><span class="w"> </span><span class="k">public </span><span class="nv">owner</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">constructor</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>owner<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">msg.sender</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">fund</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">minUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m m-Decimal">50</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10</span><span class="o">**</span><span class="m m-Decimal">18</span><span class="p">;</span><span class="w"></span>
+<span class="w">            </span><span class="kt">require</span><span class="p">(</span>getConversionRate<span class="p">(</span><span class="k">msg.value</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span>minUSD<span class="p">,</span><span class="w"> </span><span class="s2">&quot;You need to spend at least 50 dollars in ETH !&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span>amountToaddress<span class="p">[</span><span class="k">msg.sender</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">msg.value</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getPrice</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>AggregatorV3Interface<span class="w"> </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x8A753747A1Fa494EC906cE90E9f37563A8AF630e</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">(,</span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,,,)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>priceFeed<span class="p">.</span>latestRoundData<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span><span class="kt">uint256</span><span class="p">(</span>answer<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10000000000</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getConversionRate</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmount</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethPrice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>getPrice<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmountToUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>ethPrice<span class="o">*</span>ethAmount<span class="p">)</span><span class="o">/</span><span class="m m-Decimal">1000000000000000000</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span>ethAmountToUSD<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+
+<span class="w">        </span><span class="kt">modifier</span><span class="w"> </span>onlyOwner<span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="kt">require</span><span class="p">(</span><span class="k">msg.sender</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>owner<span class="p">);</span><span class="w"></span>
+<span class="w">                </span><span class="o">-</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">withdraw</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>onlyOwner<span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="k">msg.sender</span><span class="p">.</span>transfer<span class="p">(</span><span class="kt">address</span><span class="p">(</span><span class="kt">this</span><span class="p">).</span>balance<span class="p">);</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The code says; before you run the withdraw function, do the <strong>onlyOwner</strong> statement first, and then, wherever you have <code class="docutils literal notranslate"><span class="pre">-;</span></code> in the <code class="docutils literal notranslate"><span class="pre">modifer</span></code> you can run the rest of the code.</p></li>
+</ul>
+</div>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.6.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">FundMe</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span>using<span class="w"> </span>SafeMathChainlink<span class="w"> </span><span class="kt">for</span><span class="w"> </span><span class="kt">uint256</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>amountToaddress<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">address</span><span class="w"> </span><span class="k">public </span><span class="nv">owner</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">constructor</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>owner<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">msg.sender</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">fund</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">minUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m m-Decimal">50</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10</span><span class="o">**</span><span class="m m-Decimal">18</span><span class="p">;</span><span class="w"></span>
+<span class="w">            </span><span class="kt">require</span><span class="p">(</span>getConversionRate<span class="p">(</span><span class="k">msg.value</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span>minUSD<span class="p">,</span><span class="w"> </span><span class="s2">&quot;You need to spend at least 50 dollars in ETH !&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span>amountToaddress<span class="p">[</span><span class="k">msg.sender</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">msg.value</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getPrice</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>AggregatorV3Interface<span class="w"> </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x8A753747A1Fa494EC906cE90E9f37563A8AF630e</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">(,</span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,,,)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>priceFeed<span class="p">.</span>latestRoundData<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span><span class="kt">uint256</span><span class="p">(</span>answer<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10000000000</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getConversionRate</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmount</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethPrice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>getPrice<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmountToUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>ethPrice<span class="o">*</span>ethAmount<span class="p">)</span><span class="o">/</span><span class="m m-Decimal">1000000000000000000</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span>ethAmountToUSD<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+
+<span class="w">        </span><span class="kt">modifier</span><span class="w"> </span>onlyOwner<span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="kt">require</span><span class="p">(</span><span class="k">msg.sender</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>owner<span class="p">);</span><span class="w"></span>
+<span class="w">                </span>_<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">withdraw</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>onlyOwner<span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="k">msg.sender</span><span class="p">.</span>transfer<span class="p">(</span><span class="kt">address</span><span class="p">(</span><span class="kt">this</span><span class="p">).</span>balance<span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<ul>
+<li><p>One thing that is missing in this contract is the balance <strong>resetting</strong>. When we withdraw funds from this contract, we should also update the funders’ sent amounts. For that;</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>We first create an array of addresses (called funders for example) to keep track of which addresses funded the smart contract.</p></li>
+<li><p>When we withdraw the funds that are in the smart contract (defined by its address) to the owner’s wallet (defined by the address passed to the constructor which is also the first address in the funders array), we must reset all the “balances” to zero. To achieve this, we have to loop over all the addresses in the funders array and set their balances to zero.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.6.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">FundMe</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span>using<span class="w"> </span>SafeMathChainlink<span class="w"> </span><span class="kt">for</span><span class="w"> </span><span class="kt">uint256</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">mapping</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>amountToaddress<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">address</span><span class="p">[]</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>funders<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">address</span><span class="w"> </span><span class="k">public </span><span class="nv">owner</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">constructor</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>owner<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">msg.sender</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">fund</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">minUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m m-Decimal">50</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10</span><span class="o">**</span><span class="m m-Decimal">18</span><span class="p">;</span><span class="w"></span>
+<span class="w">            </span><span class="kt">require</span><span class="p">(</span>getConversionRate<span class="p">(</span><span class="k">msg.value</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span>minUSD<span class="p">,</span><span class="w"> </span><span class="s2">&quot;You need to spend at least 50 dollars in ETH !&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span>amountToaddress<span class="p">[</span><span class="k">msg.sender</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">msg.value</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span>funders<span class="p">.</span>push<span class="p">(</span><span class="k">msg.sender</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getPrice</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>AggregatorV3Interface<span class="w"> </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x8A753747A1Fa494EC906cE90E9f37563A8AF630e</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">(,</span><span class="kt">int256</span><span class="w"> </span><span class="nv">answer</span><span class="p">,,,)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>priceFeed<span class="p">.</span>latestRoundData<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span><span class="kt">uint256</span><span class="p">(</span>answer<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">10000000000</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getConversionRate</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmount</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="p">(</span><span class="kt">uint256</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethPrice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>getPrice<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">ethAmountToUSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>ethPrice<span class="o">*</span>ethAmount<span class="p">)</span><span class="o">/</span><span class="m m-Decimal">1000000000000000000</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span>ethAmountToUSD<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+
+<span class="w">        </span><span class="kt">modifier</span><span class="w"> </span>onlyOwner<span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="kt">require</span><span class="p">(</span><span class="k">msg.sender</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>owner<span class="p">);</span><span class="w"></span>
+<span class="w">                </span>_<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">withdraw</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>onlyOwner<span class="w"> </span><span class="kt">payable</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="k">msg.sender</span><span class="p">.</span>transfer<span class="p">(</span><span class="kt">address</span><span class="p">(</span><span class="kt">this</span><span class="p">).</span>balance<span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="kt">for</span><span class="p">(</span><span class="kt">uint256</span><span class="w"> </span><span class="nv">fundersIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m m-Decimal">0</span><span class="p">;</span><span class="w"> </span>fundersIndex<span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span>funders<span class="p">.</span>length<span class="p">;</span><span class="w"> </span>fundersIndex<span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="kt">address</span><span class="w"> </span><span class="nv">funder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>funders<span class="p">[</span>fundersIndex<span class="p">];</span><span class="w"></span>
+<span class="w">        </span>amountToaddress<span class="p">[</span>funder<span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m m-Decimal">0</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span>funders<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="kt">address</span><span class="p">[](</span><span class="m m-Decimal">0</span><span class="p">);</span><span class="w"> </span><span class="c1">// reset the funders array to an empty array of addresses</span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+
+<span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
 </section>
 </section>
 
