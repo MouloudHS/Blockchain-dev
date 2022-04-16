@@ -61,7 +61,7 @@ Basic Variable types
 	}
 
 
-.. NOTE::
+.. note::
 	* If we don't initialize our variables, they get automatically initialized to their corresponding null value (0 for integers for example).
 	
 	* If we want our variable to be visualized outside of the code, we can use the keyword ``public``: 
@@ -88,7 +88,7 @@ Using Functions
 	}
 
 
-.. NOTE::
+.. note::
 	* Since favNumber has been created in the contract, it has it's scope and can hence be used anywhere in the code. Otherwise, if a variable is defined inside of a function, it has the scope of that particular function and cannot be used outside of it.
 
 - Now we will complete our code with a ``function`` that retireves the updated number and renders it. 
@@ -139,7 +139,7 @@ Using Structs
 	}
 
 
-.. NOTE:: 
+.. note:: 
 
 	* **Solidity** indexes its variables wrt to the order of their appearance in the code and their scope.
 		- `dummy_number` in the previous code snippet for example has index 0
@@ -189,13 +189,13 @@ Using Arrays
 	
 	}
 	
-.. NOTE::
+.. note::
 
 	- When we crate an array using empty [ ], the array can have any size and contain any number of entries --> **It is dynamic**
 	- If we want an array to contain only **N** entries we simply pass **N** to the array: People[N] = A people array with no more than 2 entries (a size 2 array). 
 	
 	
-.. NOTE::
+.. note::
 
 	- ``memory`` keyword: In solidity, there is 2 ways to store information, we can store it in memory or in storage; When we store an object in memory, this means that it will only be stored during execution of the function. If we hold the object in storage, that piece of data will persist even after the function executes. A string in solidity is actually an object, **it is an array of bytes** and hence we have to decide whether to store it in memory or in storage. Since we need the string "_name" only during the function execution, we can have it stored in memory and when it is passed to the People array, we are guaranteed that it will be stored there forever (and hence in storage). To summarize;
 		- memory = delete the variable after exectuion
@@ -238,7 +238,7 @@ Using mappings
 
 	**- SPDX licence identifier**: Trust in smart contract can be better established if their source code is available. Since making source code available always touches on legal problems with regards to copyright, the Solidity compiler encouranges the use of machine-readable SPDX license identifiers. Every source file should start with a comment indicating its license: **// SPDX-License-Identifier: MIT** (It means that, *Hey, everybody can use this code and, we don't care*)
 	
-.. NOTE::
+.. note::
 
 	- When working with **REMIX IDE**, we developp smart contracts using the javascript VM. This way, we are provided with 100 ETH test tokens for testing and deployment and so on. If we want to deploy our smart contracts to let others interact with it, then, in remix, we switch to injected web3. This way, Metamask will popup asking for authorization to use either the testnet (Rinkeby faucet for example) or the mainnet (The real account). Injected WEB3 actually means that we are taking metamask and injecting it into the source code of the browser. This means that our WEB3 provider is metamask in this case. If we want to use another web3 provider than, there is another option to do so in REMIX.
 	
@@ -346,7 +346,7 @@ Implemeting the storage factory
 
 - If we run this code snippet in a REMIX IDE with a JavaScript VM environement for example, we're gonna get for each smart contract created by the `createSimpleStorageContract` an adress that the corresponding contract was deployed to. This way, we deployed a contract to the blockchain from another contract.
 
-.. NOTE::
+.. note::
 
 	- We should always think of starting our code with a license identifier : **SPDX-License-Identifier: MIT**
 	
@@ -492,29 +492,671 @@ Getting external data with chainlink
 
 - Blockchains being deterministic systems, we may encounter a slight problem. Let's say that we want for example to receive our funds in USDT or any other currency instead of Ether. What we need is a conversion rate between Ether and this whatever currency. However, blockchains by themselves cannot interact with the real world and this is where oracles come into place.
 
-.. NOTE::
+.. note::
 	- Smart contracts are unable to connect with external systems, data feeds, APIs, existing payment systems or any other off-chain ressources on their own and cannot do external computations which makes them deterministic systems (wall garded).
 	
 - There are two types of oracles, centralized oracles and decentralized oracles (like chainlink). If we count on centralized oracles to provide us with necessary data (like currency conversion rates), we will be going to ruin all the decentrality as if this centralized entity decides to stop feeding the smart contract with data, then, all our work will go to waste. The purpose of blockchain is that not a single entity can restict our freedom to interact with each other.
 
-.. TIP::
+.. note::
 - CHAINLINK is a modular oracle network that allows us to get data and do external computation in a highly sybil-resistant decentralized manner.
 
 - Let's **Get the latest price feed**. We can use chainlink's ``get latest price feed`` contract (`Get latest price <https://docs.chain.link/docs/get-the-latest-price/>`_).
 
-- For test purposes, this contract requires a kovan faucet so in REMIX IDE, we should switch to injected web3 in order to use this contract and we should make sure that our connected wallet from metamask is a kovan testnet wallet.
+- There is a Remix button that takes us directly to REMIX IDE. 
+- When following the previous link, we get to see a foler created in REMIX with the following code and other things as well:
 
-- The reason why we cannot use a local network (simulated VM) and we use testnets is that, in a testnet, there is a network of nodes looking at this testnet and delivering data onto this testnet unlike in a simulated VM. (However, we should note that there are ways to mock these interactions and mock a chainlink node returning data onto our blockchain.)
+.. code-block:: solidity
+
+	// SPDX-License-Identifier: MIT
+	pragma solidity ^0.8.7;
+
+	import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+
+	contract PriceConsumerV3 {
+
+		AggregatorV3Interface internal priceFeed;
+
+		/**
+		 * Network: Kovan
+		 * Aggregator: ETH/USD
+		 * Address: 0x9326BFA02ADD2366b30bacB125260Af641031331
+		 */
+		constructor() {
+		    priceFeed = AggregatorV3Interface(0x9326BFA02ADD2366b30bacB125260Af641031331);
+		}
+
+		/**
+		 * Returns the latest price
+		 */
+		function getLatestPrice() public view returns (int) {
+		    (
+		        /*uint80 roundID*/, // Defines how many times this price was updated
+		        int price, // The actual conversion rate
+		        /*uint startedAt*/, // Defines where this was last updated
+		        /*uint timeStamp*/,
+		        /*uint80 answeredInRound*/
+		    ) = priceFeed.latestRoundData();
+		    return price;
+		}
+	}
+
+- As we can see, this contract requires a kovan faucet so in REMIX IDE, we should switch to injected web3 in order to use this contract and we should make sure that our connected wallet from metamask is a kovan testnet wallet.
+
+- Once we deploy this, we can have live conversion rates through ``get_latest_price`` function of this contract. 
+
+- The reason why we cannot use a local network (simulated VM) and we use testnets is that, in a testnet, there is a network of nodes looking at this testnet and delivering data onto this testnet unlike in a simulated VM where there are no nodes. (However, we should note that there are ways to mock these interactions and mock a chainlink node returning data onto our blockchain.)
+
+
+- **In order to incorporate this ethusd conversion rate datafeed into our code**, we have to import the chainlink **eth-usd** datafeed from the npm package ``@chainlink/contracts``:
+		
+		- Syntaxe: 	``import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface"``
+		
+- As we can see, the imported is actually an interfaceand not a contract. To learn about interfaces, we will copy paste the interface code ``AggregatorV3Interface.sol`` from the github repository rather than simply importing it in a one line of code.
+	
 
 Working with interfaces 
 ------------------------
 
-- Interfaces are a minimalistic view into another contract. It is very much like a header file in C or C++ code.
+- The following is an example of an interface, this is ``AggregatorV3Interface.sol`` interface. 
 
-- In order for example to feed our contract with eth-usd conversion rate data, we will use chainlink datafeeds.
+.. code-block:: solidity
+
+	// SPDX-License-Identifier: MIT
+	pragma solidity ^0.8.0;
+
+	interface AggregatorV3Interface {
+	  function decimals() external view returns (uint8);
+
+	  function description() external view returns (string memory);
+
+	  function version() external view returns (uint256);
+
+	  // getRoundData and latestRoundData should both raise "No data present"
+	  // if they do not have data to report, instead of returning unset values
+	  // which could be misinterpreted as actual reported values.
+	  function getRoundData(uint80 _roundId)
+		external
+		view
+		returns (
+		  uint80 roundId,
+		  int256 answer,
+		  uint256 startedAt,
+		  uint256 updatedAt,
+		  uint80 answeredInRound
+		);
+
+	  function latestRoundData()
+		external
+		view
+		returns (
+		  uint80 roundId,
+		  int256 answer,
+		  uint256 startedAt,
+		  uint256 updatedAt,
+		  uint80 answeredInRound
+		);
+	}
+
+.. note::
+
+	- An interface starts with ``interface`` keyword rather than ``contract``. 
+
+	- They are a minimalistic view into another contract and have function declarations and their return types only. They are similar to header files in C.
+	
+	- Interfaces generally contains empty "external" functions that we can call from another contract.
+
+	- Solidity doesn't natively understands how to interact with another contract. We have to tell Solidity what functions can be called on another contract.
+	
+	- Interface compile down to ABI (Application binary interface). The ABI tells solidity what functions can be called on another contract. 
+	
+	- Anytime we need to interact with an **already deployed contract**, we need that contract's ABI to do so.
+
+- In the following example, we're going to interact, from a contract, with the previously defined interface.
+
+.. code-block:: solidity
+
+	// SPDX-License-Identifier: MIT
+	pragma solidity ^0.8.0;
+
+	interface AggregatorV3Interface {
+		function decimals() external view returns (uint8);
+
+		function description() external view returns (string memory);
+
+		function version() external view returns (uint256);
+
+		// getRoundData and latestRoundData should both raise "No data present"
+		// if they do not have data to report, instead of returning unset values
+		// which could be misinterpreted as actual reported values.
+		function getRoundData(uint80 _roundId)
+		external
+		view
+		returns (
+		    uint80 roundId,
+		    int256 answer,
+		    uint256 startedAt,
+		    uint256 updatedAt,
+		    uint80 answeredInRound
+		);
+
+		function latestRoundData()
+		external
+		view
+		returns (
+		    uint80 roundId,
+		    int256 answer, // latest price
+		    uint256 startedAt,
+		    uint256 updatedAt,
+		    uint80 answeredInRound
+		);
+	}
+
+	contract FundMe {
+		
+		
+		mapping(address => uint256) public addressToAmountFunded;
+		function fund() public payable {
+		    addressToAmountFunded[msg.sender] += msg.value;
+		}    
+
+		// Calling "version" function "referenced ?" in the
+		// interface (and hence already alive in a deployed smart 
+		// contract that is going to provide us with the eth/usd 
+		// conversion rate) inside the contract.
+		function getVersion() public view returns(uint256) {
+		    
+		    // Same as arrays, structs etc: ...
+		    // It's like defining a type
+		    // public isn't necessary here as we already are in
+		    // a public function
+		    // We're gonna use rinkeby testnet in this example
+		    // the address that we're going to pass to AggregatorV3Interface
+		    // is a rinkeby testnet eth/usd pricefeed address  
+		        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+		        return priceFeed.version();
+		}
+		
+		// Let's create now a function called getPrice to get the latest price 
+		// of ETH in usd, that is the eth/usd conversion rate.
+		// This time, the latestRoundData function returns a tuple (See the note 
+		// below the code snippet)
+		function getPrice() public view returns(uint256) { 
+		    AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+		    (   
+		    uint80 roundId, 
+		    int256 answer, 
+		    uint256 startedAt,
+		    uint256 updatedAt, 
+		    uint80 answeredInRound 
+		    ) = priceFeed.latestRoundData();
+
+		    // Since answer is int256, we will do a typecasting to get over the 
+		    // compiling error saying that we cannot return uint256 since 
+		    // answer is int256 
+		    return uint256(answer);
+
+		    /* Note: there are alot of unused variables (roundId etc....) which causes
+		    compiling errors... In order to be able to compile correctly, one has to 
+		    use a slighlty different syntax, namely, we can simply return blanks for
+		    each unused variable:
+		    (,int256 answer,,,) = priceFeed.latestRoundData();
+		    */ 
+		}
+
+		}
+
+.. note::
+
+	- A tuple is, in solidity, a list of objects that are potentially of different types. To define tuples, we use brackets.
+	
+- To wrap this up, and since we learned now how to deal with interfaces, we can clean our code a bit to look much nicer by simply importing the AggregatorV3Interface from chainlink npm package and ignoring the unused vars in the latestRoundData() method. The code will look like this:
+
+.. code-block:: solidity
+
+	// SPDX-License-Identifier: MIT
+	pragma solidity ^0.8.0;
+
+	import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+
+	contract FundMe {
+
+		mapping(address => uint256) public amountToaddress;
+		function fund() public payable {
+		    amountToaddress[msg.sender] += msg.value;
+		}
+
+		function getPrice() public view returns(uint256) {
+		    AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+		    (,int256 answer,,,) = priceFeed.latestRoundData();
+		    return uint256(answer);
+		}
+	}
+
+Matching units
+---------------
+
+- When we work with smart contracts, we generally encounter some issues regarding the units when we do some conversions. That being said, it's preferable to work with units of ether like **Wei** and **Gwei**. In the last contract for example, we may want to multiply our answer by a power of 10 so that we make sure to always have 18 decimal places. (4,5454,4554 -> 4,5454,4554 * 1,0000,0000,00 = 4,5454,4554,0000,0000,00 => (18 decimal places) which is 4.5 ether in wei (divide by 10^18 and you'll get it)).
+
+- Let's define a ``getConversionRate()`` function. 
+
+.. code-block:: solidity
+
+	// SPDX-License-Identifier: MIT
+	pragma solidity ^0.8.0;
+
+	import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+
+	contract FundMe {
+
+		mapping(address => uint256) public amountToaddress;
+		function fund() public payable {
+		    amountToaddress[msg.sender] += msg.value;
+		}
+
+		function getPrice() public view returns(uint256) {
+		    AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+		    (,int256 answer,,,) = priceFeed.latestRoundData();
+		    return uint256(answer * 10000000000);
+		}
+
+		function getConversionRate(uint256 ethAmount) public view returns(uint256) {
+		    // get Eth price:
+		    uint256 ethPrice = getPrice();
+		    // Convert **without forgetting to match all units
+		    // with wei [ Divide by 10^18 (10^8 from 
+		    // ethAmount and 10^10 from ethPrice) ]**
+		    uint256 ethAmountToUSD = (ethPrice*ethAmount)/1000000000000000000;
+		    
+		    return ethAmountToUSD;
+		}
+	}
+
+.. WARNING::
+
+	- Solidity has a pitfall when it comes to maths. For example, a uint8 has as maximum 255, if we define a uint8 that is equal to 255 + 1, Solidity will wrap around once we reach the maximum cap, so we get: 255 + 1 = 0, 255 + 55 = 54 and so on... which is actually wrong. This is what we call overflow in solidity and we should really be careful with it.
+	
+.. note::
+
+	- There is a library in chainlink called **SafeMathChainlink.sol** that implements some math operations to be used to render warning messages when we encounter overflows. It should be used very often. However, Starting from Solidity v0.8, we no longer need SafeMath packages.
+
+
+- In the example below, we use Chainlink's SafeMath library for uint256 varibale types only:
+	
+.. code-block:: solidity
+
+	// SPDX-License-Identifier: MIT
+	pragma solidity ^0.6.0;
+
+	import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+
+	import "@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol";
+
+	contract FundMe {
+		
+		using SafeMathChainlink for uint256;
+		mapping(address => uint256) public amountToaddress;
+		function fund() public payable {
+		    amountToaddress[msg.sender] += msg.value;
+		}
+
+		function getPrice() public view returns(uint256) {
+		    AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+		    (,int256 answer,,,) = priceFeed.latestRoundData();
+		    return uint256(answer * 10000000000);
+		}
+
+		function getConversionRate(uint256 ethAmount) public view returns(uint256) {
+
+		    uint256 ethPrice = getPrice();
+		    uint256 ethAmountToUSD = (ethPrice*ethAmount)/1000000000000000000;
+		    
+		    return ethAmountToUSD;
+		}
+	}
+		
+.. note::
+
+	- The directive ``using A for B`` can be used to attach library functions (from the library A) to any type (B) in the context of a contract.
+
+Thresholding
+------------
+
+- Let's set a threshold to the amount of Eth the sender sends us through this contract.
+
+- In order to do so, we have 2 options; 
+	- Use ``require`` keyword which is highly recommended: ``if (getConversionRate(msg.value) < minUSD) { revert? };``
+	
+	- Use ``if - revert``: 	``require(getConversionRate(msg.value) >= minUSD);``
+	
+- These 2 lines are equivalent, they both stop the contract from executing if the requirement isn't satisfied and revert the transaction => The user is going to receive his money back as well as any unspent gas.
+
+- We can add a revert error message: ``require(getConversionRate(msg.value) >= minUSD, "You need to spend more ETH !");``
+
+.. code-block:: solidity
+
+	// SPDX-License-Identifier: MIT
+	pragma solidity ^0.6.0;
+
+	import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+
+	import "@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol";
+
+	contract FundMe {
+		
+		using SafeMathChainlink for uint256;
+		
+		mapping(address => uint256) public amountToaddress;
+		function fund() public payable {
+		    uint256 minUSD = 50 * 10**18;
+		    require(getConversionRate(msg.value) >= minUSD, "You need to spend at least 50 dollars in ETH !");
+		    amountToaddress[msg.sender] += msg.value;
+		}
+
+		function getPrice() public view returns(uint256) {
+		    AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+		    (,int256 answer,,,) = priceFeed.latestRoundData();
+		    return uint256(answer * 10000000000);
+		}
+
+		function getConversionRate(uint256 ethAmount) public view returns(uint256) {
+
+		    uint256 ethPrice = getPrice();
+		    uint256 ethAmountToUSD = (ethPrice*ethAmount)/1000000000000000000;
+		    
+		    return ethAmountToUSD;
+		}
+	}
+
+- We can also add a function to withdraw the funds which is also a ``payable`` function. The keywords and functions that we are going to need are:
+
+	- ``transfer()``: a method to transfer funds between two addresses.
+	- ``this`` to refer to the current contract.
+	- ``balance`` attribute to see the balance in ether of a contract. (In this example, we are going to withdraw all of the contract's funds hence the ``balance`` attribute.)
+	
+	- Putting everything together: ``msg.sender.transfer(address(this).balance)``-- This line of code means; **whoever is calling the withdraw method (which is msg.sender), transfer them all of the contract's code.**
+		
+.. code-block:: solidity
+
+	// SPDX-License-Identifier: MIT
+	pragma solidity ^0.6.0;
+
+	import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+
+	import "@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol";
+
+	contract FundMe {
+		
+		using SafeMathChainlink for uint256;
+		
+		mapping(address => uint256) public amountToaddress;
+		function fund() public payable {
+		    uint256 minUSD = 50 * 10**18;
+		    require(getConversionRate(msg.value) >= minUSD, "You need to spend at least 50 dollars in ETH !");
+		    amountToaddress[msg.sender] += msg.value;
+		}
+
+		function getPrice() public view returns(uint256) {
+		    AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+		    (,int256 answer,,,) = priceFeed.latestRoundData();
+		    return uint256(answer * 10000000000);
+		}
+
+		function getConversionRate(uint256 ethAmount) public view returns(uint256) {
+
+		    uint256 ethPrice = getPrice();
+		    uint256 ethAmountToUSD = (ethPrice*ethAmount)/1000000000000000000;
+		    
+		    return ethAmountToUSD;
+		}
+
+		function withdraw() public payable {
+		    msg.sender.transfer(address(this).balance);
+
+		}
+	}
+
+Ownership 
+----------
+
+- It is a **very bad idea** to define a contract with a public withdrawal function. Only the owner should be able to withdraw funds from a smart contract. We hence have to declare an "owner".
+
+- In order to declare an owner to this smart contract, we maybe have to create a ``createOwner`` function to do the trick for us. However, this function can be called once the contract is deployed, so, if someone calls this function before we do once it is deployed, we are no longer the owners. Therefore, we need some sort of function that executes once the contract is deployed, and that's what a ``contructor`` is ! It is what constructs the smart contruct.
+
+- We can hence, declare a variable called ``owner``, and use the constructor to define the owner to be us, thus, ``msg.sender`` as **the first** ``msg.sender`` is whoever deployed the contract which in this case is us.
+
+- Once we define the owner, we can set a requirement through ``require()`` in the withdraw function.
+
+
+.. code-block:: solidity
+
+	// SPDX-License-Identifier: MIT
+	pragma solidity ^0.6.0;
+
+	import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+
+	import "@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol";
+
+	contract FundMe {
+		
+		using SafeMathChainlink for uint256;
+		
+		mapping(address => uint256) public amountToaddress;
+		address public owner;
+
+		constructor() public {
+		    owner = msg.sender;
+		}
+
+
+		function fund() public payable {
+		    uint256 minUSD = 50 * 10**18;
+		    require(getConversionRate(msg.value) >= minUSD, "You need to spend at least 50 dollars in ETH !");
+		    amountToaddress[msg.sender] += msg.value;
+		}
+
+		function getPrice() public view returns(uint256) {
+		    AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+		    (,int256 answer,,,) = priceFeed.latestRoundData();
+		    return uint256(answer * 10000000000);
+		}
+
+		function getConversionRate(uint256 ethAmount) public view returns(uint256) {
+
+		    uint256 ethPrice = getPrice();
+		    uint256 ethAmountToUSD = (ethPrice*ethAmount)/1000000000000000000;
+		    
+		    return ethAmountToUSD;
+		}
+
+		function withdraw() public payable {
+		    require(msg.sender == owner);
+		    msg.sender.transfer(address(this).balance);
+
+		}
+	}
+
+Modifiers and resetting
+-----------------------
+
+- Let's say we have many contracts to be run and many functions that are only for the owner to use. Do we have to repeat this require statement each time ? The answer is no, but instead we can use a ``modifier``.
+
+.. note::
+
+	- A modifier is used to change the behavior of a function in a declarative way.
+
+- In the example below, we are going to modify our last code to use a modifier:
+
+.. code-block:: solidity
+
+	// SPDX-License-Identifier: MIT
+	pragma solidity ^0.6.0;
+
+	import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+
+	import "@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol";
+
+	contract FundMe {
+		
+		using SafeMathChainlink for uint256;
+		
+		mapping(address => uint256) public amountToaddress;
+		address public owner;
+
+		constructor() public {
+		    owner = msg.sender;
+		}
+
+
+		function fund() public payable {
+		    uint256 minUSD = 50 * 10**18;
+		    require(getConversionRate(msg.value) >= minUSD, "You need to spend at least 50 dollars in ETH !");
+		    amountToaddress[msg.sender] += msg.value;
+		}
+
+		function getPrice() public view returns(uint256) {
+		    AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+		    (,int256 answer,,,) = priceFeed.latestRoundData();
+		    return uint256(answer * 10000000000);
+		}
+
+		function getConversionRate(uint256 ethAmount) public view returns(uint256) {
+
+		    uint256 ethPrice = getPrice();
+		    uint256 ethAmountToUSD = (ethPrice*ethAmount)/1000000000000000000;
+		    
+		    return ethAmountToUSD;
+		}
+
+
+		modifier onlyOwner {
+			require(msg.sender == owner);
+			-;
+		}
+		function withdraw() public onlyOwner payable {
+		    msg.sender.transfer(address(this).balance);
+
+		}
+	}
 
 
 
+.. note::
+
+	- The code says; before you run the withdraw function, do the **onlyOwner** statement first, and then, wherever you have ``-;`` in the ``modifer`` you can run the rest of the code. 
+
+.. code-block:: solidity
+
+	// SPDX-License-Identifier: MIT
+	pragma solidity ^0.6.0;
+
+	import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+
+	import "@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol";
+
+	contract FundMe {
+		
+		using SafeMathChainlink for uint256;
+		
+		mapping(address => uint256) public amountToaddress;
+		address public owner;
+
+		constructor() public {
+		    owner = msg.sender;
+		}
 
 
+		function fund() public payable {
+		    uint256 minUSD = 50 * 10**18;
+		    require(getConversionRate(msg.value) >= minUSD, "You need to spend at least 50 dollars in ETH !");
+		    amountToaddress[msg.sender] += msg.value;
+		}
 
+		function getPrice() public view returns(uint256) {
+		    AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+		    (,int256 answer,,,) = priceFeed.latestRoundData();
+		    return uint256(answer * 10000000000);
+		}
+
+		function getConversionRate(uint256 ethAmount) public view returns(uint256) {
+
+		    uint256 ethPrice = getPrice();
+		    uint256 ethAmountToUSD = (ethPrice*ethAmount)/1000000000000000000;
+		    
+		    return ethAmountToUSD;
+		}
+
+
+		modifier onlyOwner {
+			require(msg.sender == owner);
+			_;
+		}
+		function withdraw() public onlyOwner payable {
+		    msg.sender.transfer(address(this).balance);
+		}
+	}
+
+- One thing that is missing in this contract is the balance **resetting**. When we withdraw funds from this contract, we should also update the funders' sent amounts. For that;
+
+	+ We first create an array of addresses (called funders for example) to keep track of which addresses funded the smart contract.
+
+	+ When we withdraw the funds that are in the smart contract (defined by its address) to the owner's wallet (defined by the address passed to the constructor which is also the first address in the funders array), we must reset all the "balances" to zero. To achieve this, we have to loop over all the addresses in the funders array and set their balances to zero.
+	
+.. code-block:: solidity
+
+	// SPDX-License-Identifier: MIT
+	pragma solidity ^0.6.0;
+
+	import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+
+	import "@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol";
+
+	contract FundMe {
+		
+		using SafeMathChainlink for uint256;
+		
+		mapping(address => uint256) public amountToaddress;
+		address[] public funders;
+		address public owner;
+
+		constructor() public {
+		    owner = msg.sender;
+		}
+
+
+		function fund() public payable {
+		    uint256 minUSD = 50 * 10**18;
+		    require(getConversionRate(msg.value) >= minUSD, "You need to spend at least 50 dollars in ETH !");
+		    amountToaddress[msg.sender] += msg.value;
+            funders.push(msg.sender);
+        }
+
+		function getPrice() public view returns(uint256) {
+		    AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+		    (,int256 answer,,,) = priceFeed.latestRoundData();
+		    return uint256(answer * 10000000000);
+		}
+
+		function getConversionRate(uint256 ethAmount) public view returns(uint256) {
+
+		    uint256 ethPrice = getPrice();
+		    uint256 ethAmountToUSD = (ethPrice*ethAmount)/1000000000000000000;
+		    
+		    return ethAmountToUSD;
+		}
+
+
+		modifier onlyOwner {
+			require(msg.sender == owner);
+			_;
+		}
+		function withdraw() public onlyOwner payable {
+		    msg.sender.transfer(address(this).balance);
+            for(uint256 fundersIndex = 0; fundersIndex <= funders.length; fundersIndex++) {
+                address funder = funders[fundersIndex];
+                amountToaddress[funder] = 0;
+            
+            funders = new address[](0); // reset the funders array to an empty array of addresses
+            }
+        
+        }
+	}
