@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Introduction to Solidity &mdash; Solidity Tutorial 0.1.0 documentation</title>
+  <title>What is Solidity ? &mdash; Solidity Tutorial 0.1.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -37,8 +37,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <!-- Local TOC -->
               <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Introduction to Solidity</a><ul>
-<li><a class="reference internal" href="#what-is-solidity">What is Solidity ?</a></li>
+<li><a class="reference internal" href="#">What is Solidity ?</a></li>
 <li><a class="reference internal" href="#quick-intro-to-coding-with-solidity">Quick intro to coding with solidity</a><ul>
 <li><a class="reference internal" href="#basic-variable-types">Basic Variable types</a></li>
 <li><a class="reference internal" href="#using-functions">Using Functions</a></li>
@@ -55,16 +54,14 @@
 <li><a class="reference internal" href="#fund-me">Fund Me</a><ul>
 <li><a class="reference internal" href="#a-simple-function-to-fund-your-smart-contract">A simple function to fund your smart contract</a></li>
 <li><a class="reference internal" href="#getting-external-data-with-chainlink">Getting external data with chainlink</a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#working-with-interfaces">Working with interfaces</a></li>
 <li><a class="reference internal" href="#matching-units">Matching units</a></li>
 <li><a class="reference internal" href="#thresholding">Thresholding</a></li>
 <li><a class="reference internal" href="#ownership">Ownership</a></li>
 <li><a class="reference internal" href="#modifiers-and-resetting">Modifiers and resetting</a></li>
-<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </div>
         </div>
@@ -81,7 +78,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Introduction to Solidity</li>
+      <li>What is Solidity ?</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Solidity.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -91,16 +88,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="introduction-to-solidity">
-<h1>Introduction to Solidity<a class="headerlink" href="#introduction-to-solidity" title="Permalink to this headline"></a></h1>
-<section id="what-is-solidity">
-<h2>What is Solidity ?<a class="headerlink" href="#what-is-solidity" title="Permalink to this headline"></a></h2>
+  <section id="what-is-solidity">
+<h1>What is Solidity ?<a class="headerlink" href="#what-is-solidity" title="Permalink to this headline"></a></h1>
 <ul class="simple">
 <li><p>Solidity is an object-oriented, high-level language for implementing smart contracts. Smart contracts are programs which govern the behaviour of accounts within the Ethereum state.</p></li>
 </ul>
 </section>
 <section id="quick-intro-to-coding-with-solidity">
-<h2>Quick intro to coding with solidity<a class="headerlink" href="#quick-intro-to-coding-with-solidity" title="Permalink to this headline"></a></h2>
+<h1>Quick intro to coding with solidity<a class="headerlink" href="#quick-intro-to-coding-with-solidity" title="Permalink to this headline"></a></h1>
 <ul class="simple">
 <li><p><strong>This will be a quick intro to coding with solidity before we jump to more complicated things</strong>.</p></li>
 <li><p>A program in solidity always begins with <code class="docutils literal notranslate"><span class="pre">pragma</span> <span class="pre">solidity</span></code> and then the version of solidity we’re going to use.</p></li>
@@ -131,7 +126,7 @@
 </pre></div>
 </div>
 <section id="basic-variable-types">
-<h3>Basic Variable types<a class="headerlink" href="#basic-variable-types" title="Permalink to this headline"></a></h3>
+<h2>Basic Variable types<a class="headerlink" href="#basic-variable-types" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>In solidity, the basic variable types that are very common to any programming language are: <code class="docutils literal notranslate"><span class="pre">uint</span></code> <code class="docutils literal notranslate"><span class="pre">int</span></code> <code class="docutils literal notranslate"><span class="pre">bool</span></code> <code class="docutils literal notranslate"><span class="pre">string</span></code></p></li>
 <li><dl class="simple">
@@ -173,7 +168,7 @@
 </div>
 </section>
 <section id="using-functions">
-<h3>Using Functions<a class="headerlink" href="#using-functions" title="Permalink to this headline"></a></h3>
+<h2>Using Functions<a class="headerlink" href="#using-functions" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>We will start this section by giving two examples. We will create a function that stores a number inside a <code class="docutils literal notranslate"><span class="pre">uint256</span></code> variable and hence changing its value, and another that retrieves it.</p></li>
 <li><p>In <strong>Solidity</strong>, a function is created using the keyword <code class="docutils literal notranslate"><span class="pre">function</span></code>. This function can be either <em>public</em>, <em>private</em> or other types that we’ll talk about later.</p></li>
@@ -226,7 +221,7 @@
 </div>
 </section>
 <section id="using-structs">
-<h3>Using Structs<a class="headerlink" href="#using-structs" title="Permalink to this headline"></a></h3>
+<h2>Using Structs<a class="headerlink" href="#using-structs" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">structs</span></code> are used to create new structures (or types or data types …) in <strong>solidity</strong>.</p></li>
 <li><p>Suppose we want to create a <code class="docutils literal notranslate"><span class="pre">structure</span></code> called <strong>People</strong> where we store any persons’s name and age. The example below illustrated how we can do this.</p></li>
@@ -263,7 +258,7 @@ People<span class="w"> </span><span class="kt">public</span><span class="w"> </s
 </div>
 </section>
 <section id="using-arrays">
-<h3>Using Arrays<a class="headerlink" href="#using-arrays" title="Permalink to this headline"></a></h3>
+<h2>Using Arrays<a class="headerlink" href="#using-arrays" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>When we used the People <code class="docutils literal notranslate"><span class="pre">struct</span></code> as an example, we were able to create a <em>person</em> type that contains the name and the age of a given person but nothing more. That is, if we want to create for example, a list of people, we cannot do it using <code class="docutils literal notranslate"><span class="pre">struct</span></code>. This is where the <code class="docutils literal notranslate"><span class="pre">array</span></code> type comes into place. An <code class="docutils literal notranslate"><span class="pre">array</span></code> is created using a <code class="docutils literal notranslate"><span class="pre">struct</span></code>. In the example below we will create an array <strong>people</strong> that can contain any number of persons inside it.</p></li>
 </ul>
@@ -324,7 +319,7 @@ People<span class="p">[]</span><span class="w"> </span><span class="kt">public</
 </div>
 </section>
 <section id="using-mappings">
-<h3>Using mappings<a class="headerlink" href="#using-mappings" title="Permalink to this headline"></a></h3>
+<h2>Using mappings<a class="headerlink" href="#using-mappings" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>In the previous code snippet, we’ve created an array that can contain any number of people (dynamic array) stored by their name and age. But what if we want to know for example the age of a person given its name ? This is possible through another datastrucuture called <strong>mappings</strong>.</p></li>
 <li><p>Mappings are dictionnary like datastructures that are used to map an object to another object or value.</p></li>
@@ -365,9 +360,9 @@ People<span class="p">[]</span><span class="w"> </span><span class="kt">public</
 </section>
 </section>
 <section id="storage-factory-example">
-<h2>Storage Factory Example<a class="headerlink" href="#storage-factory-example" title="Permalink to this headline"></a></h2>
+<h1>Storage Factory Example<a class="headerlink" href="#storage-factory-example" title="Permalink to this headline"></a></h1>
 <section id="implemeting-the-storage-factory">
-<h3>Implemeting the storage factory<a class="headerlink" href="#implemeting-the-storage-factory" title="Permalink to this headline"></a></h3>
+<h2>Implemeting the storage factory<a class="headerlink" href="#implemeting-the-storage-factory" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>Let’s say now that we want to execute a contract from another contract that is written in another file. For this we use import. To illustrate this, we’re gonna create a simple storage smart contract to store people by name and age and map their names to their ages and then create another contract that executes this contract.</p></li>
 </ul>
@@ -517,7 +512,7 @@ People<span class="p">[]</span><span class="w"> </span><span class="kt">public</
 </div>
 </section>
 <section id="inheritance">
-<h3>Inheritance<a class="headerlink" href="#inheritance" title="Permalink to this headline"></a></h3>
+<h2>Inheritance<a class="headerlink" href="#inheritance" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>So far, all looks good, but what if we had too many functions inside SimpleStorage contract and we wanted to use all of them inside our StorageFactory ?</p></li>
 <li><p>Inheritance solves this problem: StorageFactory can inherit all the functions of SimpleStorage.</p></li>
@@ -568,9 +563,9 @@ People<span class="p">[]</span><span class="w"> </span><span class="kt">public</
 </section>
 </section>
 <section id="fund-me">
-<h2>Fund Me<a class="headerlink" href="#fund-me" title="Permalink to this headline"></a></h2>
+<h1>Fund Me<a class="headerlink" href="#fund-me" title="Permalink to this headline"></a></h1>
 <section id="a-simple-function-to-fund-your-smart-contract">
-<h3>A simple function to fund your smart contract<a class="headerlink" href="#a-simple-function-to-fund-your-smart-contract" title="Permalink to this headline"></a></h3>
+<h2>A simple function to fund your smart contract<a class="headerlink" href="#a-simple-function-to-fund-your-smart-contract" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>In case we want to create payable functions, we should use the keyword <code class="docutils literal notranslate"><span class="pre">payable</span></code>.</p></li>
 <li><p>The code below is a simple implementation of a payable function.</p></li>
@@ -607,7 +602,7 @@ People<span class="p">[]</span><span class="w"> </span><span class="kt">public</
 </div>
 </section>
 <section id="getting-external-data-with-chainlink">
-<h3>Getting external data with chainlink<a class="headerlink" href="#getting-external-data-with-chainlink" title="Permalink to this headline"></a></h3>
+<h2>Getting external data with chainlink<a class="headerlink" href="#getting-external-data-with-chainlink" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>Blockchains being deterministic systems, we may encounter a slight problem. Let’s say that we want for example to receive our funds in USDT or any other currency instead of Ether. What we need is a conversion rate between Ether and this whatever currency. However, blockchains by themselves cannot interact with the real world and this is where oracles come into place.</p></li>
 </ul>
@@ -673,7 +668,6 @@ People<span class="p">[]</span><span class="w"> </span><span class="kt">public</
 </li>
 <li><p>As we can see, the imported is actually an interfaceand not a contract. To learn about interfaces, we will copy paste the interface code <code class="docutils literal notranslate"><span class="pre">AggregatorV3Interface.sol</span></code> from the github repository rather than simply importing it in a one line of code.</p></li>
 </ul>
-</section>
 </section>
 <section id="working-with-interfaces">
 <h2>Working with interfaces<a class="headerlink" href="#working-with-interfaces" title="Permalink to this headline"></a></h2>
@@ -1290,9 +1284,9 @@ interface<span class="w"> </span>AggregatorV3Interface<span class="w"> </span><s
 </pre></div>
 </div>
 </section>
-<section id="conclusion">
-<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline"></a></h2>
 </section>
+<section id="conclusion">
+<h1>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline"></a></h1>
 </section>
 
 

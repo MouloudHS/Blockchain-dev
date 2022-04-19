@@ -1,13 +1,10 @@
-Introduction to Solidity
-++++++++++++++++++++++++
-
 What is Solidity ?
--------------------
+++++++++++++++++++
 
 - Solidity is an object-oriented, high-level language for implementing smart contracts. Smart contracts are programs which govern the behaviour of accounts within the Ethereum state.
 
 Quick intro to coding with solidity
------------------------------------
++++++++++++++++++++++++++++++++++++
 
 - **This will be a quick intro to coding with solidity before we jump to more complicated things**. 
 
@@ -244,7 +241,7 @@ Using mappings
 	
 	
 Storage Factory Example
------------------------
+++++++++++++++++++++++++
 
 Implemeting the storage factory
 ===============================
@@ -447,10 +444,10 @@ Inheritance
 - **That was all for the storage example.**
 
 Fund Me
--------
++++++++
 
 A simple function to fund your smart contract
-=============================================
+==============================================
 
 - In case we want to create payable functions, we should use the keyword ``payable``.
 
@@ -488,7 +485,7 @@ A simple function to fund your smart contract
 	}
 
 Getting external data with chainlink
-====================================
+=====================================
 
 - Blockchains being deterministic systems, we may encounter a slight problem. Let's say that we want for example to receive our funds in USDT or any other currency instead of Ether. What we need is a conversion rate between Ether and this whatever currency. However, blockchains by themselves cannot interact with the real world and this is where oracles come into place.
 
@@ -555,7 +552,7 @@ Getting external data with chainlink
 	
 
 Working with interfaces 
-------------------------
+=======================
 
 - The following is an example of an interface, this is ``AggregatorV3Interface.sol`` interface. 
 
@@ -733,7 +730,7 @@ Working with interfaces
 	}
 
 Matching units
----------------
+==============
 
 - When we work with smart contracts, we generally encounter some issues regarding the units when we do some conversions. That being said, it's preferable to work with units of ether like **Wei** and **Gwei**. In the last contract for example, we may want to multiply our answer by a power of 10 so that we make sure to always have 18 decimal places. (4,5454,4554 -> 4,5454,4554 * 1,0000,0000,00 = 4,5454,4554,0000,0000,00 => (18 decimal places) which is 4.5 ether in wei (divide by 10^18 and you'll get it)).
 
@@ -819,7 +816,7 @@ Matching units
 	- The directive ``using A for B`` can be used to attach library functions (from the library A) to any type (B) in the context of a contract.
 
 Thresholding
-------------
+============
 
 - Let's set a threshold to the amount of Eth the sender sends us through this contract.
 
@@ -916,7 +913,7 @@ Thresholding
 	}
 
 Ownership 
-----------
+=========
 
 - It is a **very bad idea** to define a contract with a public withdrawal function. Only the owner should be able to withdraw funds from a smart contract. We hence have to declare an "owner".
 
@@ -976,7 +973,7 @@ Ownership
 	}
 
 Modifiers and resetting
------------------------
+=======================
 
 - Let's say we have many contracts to be run and many functions that are only for the owner to use. Do we have to repeat this require statement each time ? The answer is no, but instead we can use a ``modifier``.
 
@@ -1162,4 +1159,9 @@ Modifiers and resetting
 	}
 
 Conclusion
--------------
+++++++++++
+
+
+
+
+
