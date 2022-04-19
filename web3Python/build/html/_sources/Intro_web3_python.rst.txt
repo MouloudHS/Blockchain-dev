@@ -819,12 +819,5 @@ Example files
 
 	.env
 
-Conclusion
-==========
 
-- **Web3.py** is indeed a good python package to compile, deploy and interact with smart contracts. However, it seems like it's a lot of work having to do everything from scratch all on our own. Plus, what if we want to interact with a contract that we deployed in the past ? The way we have developped in here works fine with a new contract that we want to deploy and interact with it but it isn't the best option if we want to interact with an already deployed contract. A solution, a very good solution indeed is using another python-based developpement and testing frameword for smart contracts targeting the EVM called "brownie".
 
-Brownie 🥧
-==========
-
-- Brownie is currently the most populat smart contract developpment plateform built based on python. It is used by DeFi giants such as `yearn.finance`, `curve.fi`, `badger.finance` etc... Brownie is built on top of Web3.py.

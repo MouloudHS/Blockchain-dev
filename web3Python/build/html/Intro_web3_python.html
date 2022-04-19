@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction to Web3.py &mdash; Web3.py 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Introduction to “Web3.py”" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Web3.py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction to Web3.py</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-the-python-web3-py-package">What is the python Web3.py package ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#first-python-script-to-deploy-a-smart-contract">First python script to deploy a smart contract</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#deploying-in-python">Deploying in python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#connecting-to-ganache-web3-py">Connecting to ganache: Web3.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#interacting-with-the-contract-after-deployment">Interacting with the contract after deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ganache-in-command-line-mode">Ganache in command line mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#example-files">Example files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#env-example-file">“.env” example file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gitignore-example-file">“.gitignore” example file</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Introduction to Web3.py</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Intro_web3_python.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction-to-web3-py">
+<h1>Introduction to Web3.py<a class="headerlink" href="#introduction-to-web3-py" title="Permalink to this headline"></a></h1>
+<section id="what-is-the-python-web3-py-package">
+<h2>What is the python Web3.py package ?<a class="headerlink" href="#what-is-the-python-web3-py-package" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Web3.py is a Python library for interacting with Ethereum.</p></li>
+<li><p>It’s commonly found in decentralized apps (dapps) to help with sending transactions, interacting with smart contracts, reading block data, and a variety of other use cases.</p></li>
+<li><p>The original API was derived from the Web3.js Javascript API, but has since evolved toward the needs and creature comforts of Python developers.</p></li>
+<li><p>In order to interact with a smart contract in python, we can use either Web3.py or Brownie.</p></li>
+<li><p>In this tutorial, we are going to use web3.py.</p></li>
+</ul>
+</section>
+<section id="first-python-script-to-deploy-a-smart-contract">
+<h2>First python script to deploy a smart contract<a class="headerlink" href="#first-python-script-to-deploy-a-smart-contract" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Let’s create a python function to deploy a smart contract called <strong>deploy.py</strong>.</p></li>
+<li><p>In order to compile a smart contract in python, we use the python package <strong>py-solc-x</strong>.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># deploy.py</span>
+
+<span class="c1"># install solidity compiler for version 0.6.0</span>
+<span class="kn">import</span> <span class="nn">solcx</span>
+<span class="n">solcx</span><span class="o">.</span><span class="n">install_solc</span><span class="p">(</span><span class="s1">&#39;0.6.0&#39;</span><span class="p">)</span>
+
+<span class="c1"># import the &quot;compile&quot; function from solcx</span>
+<span class="kn">from</span> <span class="nn">solcx</span> <span class="kn">import</span> <span class="n">compile_standard</span>
+
+<span class="c1"># Open the solidity file and store</span>
+<span class="c1"># its content as a variable</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./SimpleStorage.sol&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">simple_storage_file</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="c1"># Prepare for compiling solidity</span>
+<span class="n">input_data</span> <span class="o">=</span> <span class="p">{</span>
+<span class="s2">&quot;language&quot;</span><span class="p">:</span><span class="s2">&quot;Solidity&quot;</span><span class="p">,</span>
+<span class="s2">&quot;sources&quot;</span><span class="p">:{</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">simple_storage_file</span><span class="p">}},</span>
+<span class="s2">&quot;settings&quot;</span><span class="p">:{</span> <span class="s2">&quot;outputSelection&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;abi&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="s2">&quot;evm.bytecode&quot;</span><span class="p">,</span> <span class="s2">&quot;evm.sourceMap&quot;</span><span class="p">]}}}</span>
+<span class="p">}</span>
+<span class="c1"># compile and save the compiled solidity code to a variable</span>
+<span class="n">compiled_sol</span> <span class="o">=</span> <span class="n">compile_standard</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">solc_version</span> <span class="o">=</span> <span class="s2">&quot;0.6.0&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Now with this minimal <code class="docutils literal notranslate"><span class="pre">deploy.py</span></code> file, we actually opened the solidity file <strong>“SimpleStorage.sol”</strong>, and we compiled it but we didn’t deploy it and we don’t have anything returned after compilation.</p></li>
+<li><p>We can see that we passed some input data to the <code class="docutils literal notranslate"><span class="pre">compile_standard</span></code> function. In the note below we are going to explain each argument of the <code class="docutils literal notranslate"><span class="pre">input_data</span></code> which is a dictionnary.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>“language” is just the programming language that we are using in the opened file (In this case solidity).</p></li>
+<li><p>“sources” is the dictionnary <code class="docutils literal notranslate"><span class="pre">{&quot;SimpleStorage.sol&quot;:</span> <span class="pre">{&quot;content&quot;:simple_storage_file}</span></code> with <code class="docutils literal notranslate"><span class="pre">simple_storage_file</span></code> being the variable used to store the solidity file.</p></li>
+<li><p>settings is a dictionnary. The main key is <code class="docutils literal notranslate"><span class="pre">outputSelection</span></code> and it is a dictionnary with what we want to output in the form of a <code class="docutils literal notranslate"><span class="pre">json</span></code> file (In this case, we want to output, the metadata, the abi, the evm bytecode and the evm SourceMap) // outputSelection: <code class="docutils literal notranslate"><span class="pre">{&quot;*&quot;:</span> <span class="pre">{</span> <span class="pre">&quot;*&quot;:</span> <span class="pre">[&quot;abi&quot;,</span> <span class="pre">&quot;metadata&quot;,</span> <span class="pre">&quot;evm.bytecode&quot;,</span> <span class="pre">&quot;evm.sourceMap&quot;]</span> <span class="pre">}</span> <span class="pre">}</span></code></p></li>
+</ul>
+</div>
+<ul class="simple">
+<li><p>Now we want to see the json file that we’ve created. Io order to achieve this, we will have to store compiled solidity in the format of a JSON file.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">solcx</span>
+<span class="n">solcx</span><span class="o">.</span><span class="n">install_solc</span><span class="p">(</span><span class="s1">&#39;0.6.0&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">solcx</span> <span class="kn">import</span> <span class="n">compile_standard</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1"># Open the solidity file and store</span>
+<span class="c1"># its content as a variable</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./SimpleStorage.sol&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">simple_storage_file</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="c1"># save the compiled solidity code to a variable</span>
+
+<span class="n">input_data</span> <span class="o">=</span> <span class="p">{</span>
+<span class="s2">&quot;language&quot;</span><span class="p">:</span><span class="s2">&quot;Solidity&quot;</span><span class="p">,</span>
+<span class="s2">&quot;sources&quot;</span><span class="p">:{</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">simple_storage_file</span><span class="p">}},</span>
+<span class="s2">&quot;settings&quot;</span><span class="p">:{</span> <span class="s2">&quot;outputSelection&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;abi&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="s2">&quot;evm.bytecode&quot;</span><span class="p">,</span> <span class="s2">&quot;evm.sourceMap&quot;</span><span class="p">]}}}</span>
+<span class="p">}</span>
+
+<span class="n">compiled_sol</span> <span class="o">=</span> <span class="n">compile_standard</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">solc_version</span> <span class="o">=</span> <span class="s2">&quot;0.6.0&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;compiled_code.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">compiled_sol</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>What we get as output is a JSON file, this JSON file contain the ABI, the metadata and other important stuff for deployement purposes. The ABI as we can see contain all the informations about the inputs and what are they supposed to output.</p></li>
+</ul>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;contracts&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;SimpleStorage.sol&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;SimpleStorage&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;abi&quot;</span><span class="p">:</span>
+                <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="nt">&quot;inputs&quot;</span><span class="p">:</span>
+                        <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="nt">&quot;internalType&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;_name&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                            <span class="p">},</span>
+                            <span class="p">{</span>
+                                <span class="nt">&quot;internalType&quot;</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;_age&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span>
+                            <span class="p">}</span>
+                        <span class="p">],</span>
+                        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;addPerson&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;outputs&quot;</span><span class="p">:</span>
+                        <span class="p">[],</span>
+                        <span class="nt">&quot;stateMutability&quot;</span><span class="p">:</span> <span class="s2">&quot;nonpayable&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;function&quot;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="nt">&quot;inputs&quot;</span><span class="p">:</span>
+                        <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="nt">&quot;internalType&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                            <span class="p">}</span>
+                        <span class="p">],</span>
+                        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;nameToAge&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;outputs&quot;</span><span class="p">:</span>
+                        <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="nt">&quot;internalType&quot;</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span>
+                            <span class="p">}</span>
+                        <span class="p">],</span>
+                        <span class="nt">&quot;stateMutability&quot;</span><span class="p">:</span> <span class="s2">&quot;view&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;function&quot;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="nt">&quot;inputs&quot;</span><span class="p">:</span>
+                        <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="nt">&quot;internalType&quot;</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span>
+                            <span class="p">}</span>
+                        <span class="p">],</span>
+                        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;people&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;outputs&quot;</span><span class="p">:</span>
+                        <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="nt">&quot;internalType&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                            <span class="p">},</span>
+                            <span class="p">{</span>
+                                <span class="nt">&quot;internalType&quot;</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;age&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span>
+                            <span class="p">}</span>
+                        <span class="p">],</span>
+                        <span class="nt">&quot;stateMutability&quot;</span><span class="p">:</span> <span class="s2">&quot;view&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;function&quot;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="nt">&quot;inputs&quot;</span><span class="p">:</span>
+                        <span class="p">[],</span>
+                        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;retrieve&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;outputs&quot;</span><span class="p">:</span>
+                        <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="nt">&quot;internalType&quot;</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span>
+                            <span class="p">}</span>
+                        <span class="p">],</span>
+                        <span class="nt">&quot;stateMutability&quot;</span><span class="p">:</span> <span class="s2">&quot;view&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;function&quot;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="nt">&quot;inputs&quot;</span><span class="p">:</span>
+                        <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="nt">&quot;internalType&quot;</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;_number&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span>
+                            <span class="p">}</span>
+                        <span class="p">],</span>
+                        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;store&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;outputs&quot;</span><span class="p">:</span>
+                        <span class="p">[],</span>
+                        <span class="nt">&quot;stateMutability&quot;</span><span class="p">:</span> <span class="s2">&quot;nonpayable&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;function&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">],</span>
+                <span class="nt">&quot;evm&quot;</span><span class="p">:</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;bytecode&quot;</span><span class="p">:</span>
+                    <span class="p">{</span>
+                        <span class="nt">&quot;linkReferences&quot;</span><span class="p">:</span>
+                        <span class="p">{},</span>
+                        <span class="nt">&quot;object&quot;</span><span class="p">:</span> <span class="s2">&quot;608060405234801561001057600080fd5b506105aa806100206000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c80632e64cec11461005c5780636057361d1461007a5780636f760f41146100a857806390c3ee4d1461016d5780639e7a13ad1461023c575b600080fd5b6100646102ea565b6040518082815260200191505060405180910390f35b6100a66004803603602081101561009057600080fd5b81019080803590602001909291905050506102f3565b005b61016b600480360360408110156100be57600080fd5b81019080803590602001906401000000008111156100db57600080fd5b8201836020820111156100ed57600080fd5b8035906020019184600183028401116401000000008311171561010f57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290803590602001909291905050506102fd565b005b6102266004803603602081101561018357600080fd5b81019080803590602001906401000000008111156101a057600080fd5b8201836020820111156101b257600080fd5b803590602001918460018302840111640100000000831117156101d457600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192905050506103d8565b6040518082815260200191505060405180910390f35b6102686004803603602081101561025257600080fd5b8101908080359060200190929190505050610406565b6040518080602001838152602001828103825284818151815260200191508051906020019080838360005b838110156102ae578082015181840152602081019050610293565b50505050905090810190601f1680156102db5780820380516001836020036101000a031916815260200191505b50935050505060405180910390f35b60008054905090565b8060008190555050565b6001604051806040016040528084815260200183815250908060018154018082558091505060019003906000526020600020906002020160009091909190915060008201518160000190805190602001906103599291906104cf565b50602082015181600101555050806002836040518082805190602001908083835b6020831061039d578051825260208201915060208101905060208303925061037a565b6001836020036101000a0380198251168184511680821785525050505050509050019150509081526020016040518091039020819055505050565b6002818051602081018201805184825260208301602085012081835280955050505050506000915090505481565b6001818154811061041357fe5b9060005260206000209060020201600091509050806000018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156104bf5780601f10610494576101008083540402835291602001916104bf565b820191906000526020600020905b8154815290600101906020018083116104a257829003601f168201915b5050505050908060010154905082565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061051057805160ff191683800117855561053e565b8280016001018555821561053e579182015b8281111561053d578251825591602001919060010190610522565b5b50905061054b919061054f565b5090565b61057191905b8082111561056d576000816000905550600101610555565b5090565b9056fea26469706673582212200123e4930113309f464cbb148407bc4273fef984586e62238fb3054b55d5afed64736f6c63430006000033&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;opcodes&quot;</span><span class="p">:</span> <span class="s2">&quot;PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH2 0x10 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH2 0x5AA DUP1 PUSH2 0x20 PUSH1 0x0 CODECOPY PUSH1 0x0 RETURN INVALID PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH2 0x10 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x4 CALLDATASIZE LT PUSH2 0x57 JUMPI PUSH1 0x0 CALLDATALOAD PUSH1 0xE0 SHR DUP1 PUSH4 0x2E64CEC1 EQ PUSH2 0x5C JUMPI DUP1 PUSH4 0x6057361D EQ PUSH2 0x7A JUMPI DUP1 PUSH4 0x6F760F41 EQ PUSH2 0xA8 JUMPI DUP1 PUSH4 0x90C3EE4D EQ PUSH2 0x16D JUMPI DUP1 PUSH4 0x9E7A13AD EQ PUSH2 0x23C JUMPI JUMPDEST PUSH1 0x0 DUP1 REVERT JUMPDEST PUSH2 0x64 PUSH2 0x2EA JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xA6 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x90 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x2F3 JUMP JUMPDEST STOP JUMPDEST PUSH2 0x16B PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x40 DUP2 LT ISZERO PUSH2 0xBE JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 PUSH5 0x100000000 DUP2 GT ISZERO PUSH2 0xDB JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP3 ADD DUP4 PUSH1 0x20 DUP3 ADD GT ISZERO PUSH2 0xED JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP2 DUP5 PUSH1 0x1 DUP4 MUL DUP5 ADD GT PUSH5 0x100000000 DUP4 GT OR ISZERO PUSH2 0x10F JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST SWAP2 SWAP1 DUP1 DUP1 PUSH1 0x1F ADD PUSH1 0x20 DUP1 SWAP2 DIV MUL PUSH1 0x20 ADD PUSH1 0x40 MLOAD SWAP1 DUP2 ADD PUSH1 0x40 MSTORE DUP1 SWAP4 SWAP3 SWAP2 SWAP1 DUP2 DUP2 MSTORE PUSH1 0x20 ADD DUP4 DUP4 DUP1 DUP3 DUP5 CALLDATACOPY PUSH1 0x0 DUP2 DUP5 ADD MSTORE PUSH1 0x1F NOT PUSH1 0x1F DUP3 ADD AND SWAP1 POP DUP1 DUP4 ADD SWAP3 POP POP POP POP POP POP POP SWAP2 SWAP3 SWAP2 SWAP3 SWAP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x2FD JUMP JUMPDEST STOP JUMPDEST PUSH2 0x226 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x183 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 PUSH5 0x100000000 DUP2 GT ISZERO PUSH2 0x1A0 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP3 ADD DUP4 PUSH1 0x20 DUP3 ADD GT ISZERO PUSH2 0x1B2 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP2 DUP5 PUSH1 0x1 DUP4 MUL DUP5 ADD GT PUSH5 0x100000000 DUP4 GT OR ISZERO PUSH2 0x1D4 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST SWAP2 SWAP1 DUP1 DUP1 PUSH1 0x1F ADD PUSH1 0x20 DUP1 SWAP2 DIV MUL PUSH1 0x20 ADD PUSH1 0x40 MLOAD SWAP1 DUP2 ADD PUSH1 0x40 MSTORE DUP1 SWAP4 SWAP3 SWAP2 SWAP1 DUP2 DUP2 MSTORE PUSH1 0x20 ADD DUP4 DUP4 DUP1 DUP3 DUP5 CALLDATACOPY PUSH1 0x0 DUP2 DUP5 ADD MSTORE PUSH1 0x1F NOT PUSH1 0x1F DUP3 ADD AND SWAP1 POP DUP1 DUP4 ADD SWAP3 POP POP POP POP POP POP POP SWAP2 SWAP3 SWAP2 SWAP3 SWAP1 POP POP POP PUSH2 0x3D8 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x268 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x252 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x406 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP1 PUSH1 0x20 ADD DUP4 DUP2 MSTORE PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE DUP5 DUP2 DUP2 MLOAD DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 DUP1 DUP4 DUP4 PUSH1 0x0 JUMPDEST DUP4 DUP2 LT ISZERO PUSH2 0x2AE JUMPI DUP1 DUP3 ADD MLOAD DUP2 DUP5 ADD MSTORE PUSH1 0x20 DUP2 ADD SWAP1 POP PUSH2 0x293 JUMP JUMPDEST POP POP POP POP SWAP1 POP SWAP1 DUP2 ADD SWAP1 PUSH1 0x1F AND DUP1 ISZERO PUSH2 0x2DB JUMPI DUP1 DUP3 SUB DUP1 MLOAD PUSH1 0x1 DUP4 PUSH1 0x20 SUB PUSH2 0x100 EXP SUB NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP JUMPDEST POP SWAP4 POP POP POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH1 0x0 DUP1 SLOAD SWAP1 POP SWAP1 JUMP JUMPDEST DUP1 PUSH1 0x0 DUP2 SWAP1 SSTORE POP POP JUMP JUMPDEST PUSH1 0x1 PUSH1 0x40 MLOAD DUP1 PUSH1 0x40 ADD PUSH1 0x40 MSTORE DUP1 DUP5 DUP2 MSTORE PUSH1 0x20 ADD DUP4 DUP2 MSTORE POP SWAP1 DUP1 PUSH1 0x1 DUP2 SLOAD ADD DUP1 DUP3 SSTORE DUP1 SWAP2 POP POP PUSH1 0x1 SWAP1 SUB SWAP1 PUSH1 0x0 MSTORE PUSH1 0x20 PUSH1 0x0 KECCAK256 SWAP1 PUSH1 0x2 MUL ADD PUSH1 0x0 SWAP1 SWAP2 SWAP1 SWAP2 SWAP1 SWAP2 POP PUSH1 0x0 DUP3 ADD MLOAD DUP2 PUSH1 0x0 ADD SWAP1 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 PUSH2 0x359 SWAP3 SWAP2 SWAP1 PUSH2 0x4CF JUMP JUMPDEST POP PUSH1 0x20 DUP3 ADD MLOAD DUP2 PUSH1 0x1 ADD SSTORE POP POP DUP1 PUSH1 0x2 DUP4 PUSH1 0x40 MLOAD DUP1 DUP3 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 DUP1 DUP4 DUP4 JUMPDEST PUSH1 0x20 DUP4 LT PUSH2 0x39D JUMPI DUP1 MLOAD DUP3 MSTORE PUSH1 0x20 DUP3 ADD SWAP2 POP PUSH1 0x20 DUP2 ADD SWAP1 POP PUSH1 0x20 DUP4 SUB SWAP3 POP PUSH2 0x37A JUMP JUMPDEST PUSH1 0x1 DUP4 PUSH1 0x20 SUB PUSH2 0x100 EXP SUB DUP1 NOT DUP3 MLOAD AND DUP2 DUP5 MLOAD AND DUP1 DUP3 OR DUP6 MSTORE POP POP POP POP POP POP SWAP1 POP ADD SWAP2 POP POP SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 KECCAK256 DUP2 SWAP1 SSTORE POP POP POP JUMP JUMPDEST PUSH1 0x2 DUP2 DUP1 MLOAD PUSH1 0x20 DUP2 ADD DUP3 ADD DUP1 MLOAD DUP5 DUP3 MSTORE PUSH1 0x20 DUP4 ADD PUSH1 0x20 DUP6 ADD KECCAK256 DUP2 DUP4 MSTORE DUP1 SWAP6 POP POP POP POP POP POP PUSH1 0x0 SWAP2 POP SWAP1 POP SLOAD DUP2 JUMP JUMPDEST PUSH1 0x1 DUP2 DUP2 SLOAD DUP2 LT PUSH2 0x413 JUMPI INVALID JUMPDEST SWAP1 PUSH1 0x0 MSTORE PUSH1 0x20 PUSH1 0x0 KECCAK256 SWAP1 PUSH1 0x2 MUL ADD PUSH1 0x0 SWAP2 POP SWAP1 POP DUP1 PUSH1 0x0 ADD DUP1 SLOAD PUSH1 0x1 DUP2 PUSH1 0x1 AND ISZERO PUSH2 0x100 MUL SUB AND PUSH1 0x2 SWAP1 DIV DUP1 PUSH1 0x1F ADD PUSH1 0x20 DUP1 SWAP2 DIV MUL PUSH1 0x20 ADD PUSH1 0x40 MLOAD SWAP1 DUP2 ADD PUSH1 0x40 MSTORE DUP1 SWAP3 SWAP2 SWAP1 DUP2 DUP2 MSTORE PUSH1 0x20 ADD DUP3 DUP1 SLOAD PUSH1 0x1 DUP2 PUSH1 0x1 AND ISZERO PUSH2 0x100 MUL SUB AND PUSH1 0x2 SWAP1 DIV DUP1 ISZERO PUSH2 0x4BF JUMPI DUP1 PUSH1 0x1F LT PUSH2 0x494 JUMPI PUSH2 0x100 DUP1 DUP4 SLOAD DIV MUL DUP4 MSTORE SWAP2 PUSH1 0x20 ADD SWAP2 PUSH2 0x4BF JUMP JUMPDEST DUP3 ADD SWAP2 SWAP1 PUSH1 0x0 MSTORE PUSH1 0x20 PUSH1 0x0 KECCAK256 SWAP1 JUMPDEST DUP2 SLOAD DUP2 MSTORE SWAP1 PUSH1 0x1 ADD SWAP1 PUSH1 0x20 ADD DUP1 DUP4 GT PUSH2 0x4A2 JUMPI DUP3 SWAP1 SUB PUSH1 0x1F AND DUP3 ADD SWAP2 JUMPDEST POP POP POP POP POP SWAP1 DUP1 PUSH1 0x1 ADD SLOAD SWAP1 POP DUP3 JUMP JUMPDEST DUP3 DUP1 SLOAD PUSH1 0x1 DUP2 PUSH1 0x1 AND ISZERO PUSH2 0x100 MUL SUB AND PUSH1 0x2 SWAP1 DIV SWAP1 PUSH1 0x0 MSTORE PUSH1 0x20 PUSH1 0x0 KECCAK256 SWAP1 PUSH1 0x1F ADD PUSH1 0x20 SWAP1 DIV DUP2 ADD SWAP3 DUP3 PUSH1 0x1F LT PUSH2 0x510 JUMPI DUP1 MLOAD PUSH1 0xFF NOT AND DUP4 DUP1 ADD OR DUP6 SSTORE PUSH2 0x53E JUMP JUMPDEST DUP3 DUP1 ADD PUSH1 0x1 ADD DUP6 SSTORE DUP3 ISZERO PUSH2 0x53E JUMPI SWAP2 DUP3 ADD JUMPDEST DUP3 DUP2 GT ISZERO PUSH2 0x53D JUMPI DUP3 MLOAD DUP3 SSTORE SWAP2 PUSH1 0x20 ADD SWAP2 SWAP1 PUSH1 0x1 ADD SWAP1 PUSH2 0x522 JUMP JUMPDEST JUMPDEST POP SWAP1 POP PUSH2 0x54B SWAP2 SWAP1 PUSH2 0x54F JUMP JUMPDEST POP SWAP1 JUMP JUMPDEST PUSH2 0x571 SWAP2 SWAP1 JUMPDEST DUP1 DUP3 GT ISZERO PUSH2 0x56D JUMPI PUSH1 0x0 DUP2 PUSH1 0x0 SWAP1 SSTORE POP PUSH1 0x1 ADD PUSH2 0x555 JUMP JUMPDEST POP SWAP1 JUMP JUMPDEST SWAP1 JUMP INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 ADD 0x23 0xE4 SWAP4 ADD SGT ADDRESS SWAP16 CHAINID 0x4C 0xBB EQ DUP5 SMOD 0xBC TIMESTAMP PUSH20 0xFEF984586E62238FB3054B55D5AFED64736F6C63 NUMBER STOP MOD STOP STOP CALLER &quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;sourceMap&quot;</span><span class="p">:</span> <span class="s2">&quot;57:621:0:-:0;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;57:621:0;;;;;;;&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="s2">&quot;{\&quot;compiler\&quot;:</span>
+<span class="s2">                {\&quot;version\&quot;:\&quot;0.6.0+commit.26b70077\&quot;},\&quot;language\&quot;:\&quot;Solidity\&quot;,\&quot;output\&quot;:{\&quot;abi\&quot;:</span>
+<span class="s2">                [{\&quot;inputs\&quot;:[{\&quot;internalType\&quot;:\&quot;string\&quot;,\&quot;name\&quot;:\&quot;_name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;internalType\&quot;:\&quot;uint256\&quot;,\&quot;name\&quot;:\&quot;_age\&quot;,\&quot;type\&quot;:\&quot;uint256\&quot;}],\&quot;name\&quot;:\&quot;addPerson\&quot;,\&quot;outputs\&quot;:[],\&quot;stateMutability\&quot;:\&quot;nonpayable\&quot;,\&quot;type\&quot;:\&quot;function\&quot;},{\&quot;inputs\&quot;:[{\&quot;internalType\&quot;:\&quot;string\&quot;,\&quot;name\&quot;:\&quot;\&quot;,\&quot;type\&quot;:\&quot;string\&quot;}],\&quot;name\&quot;:\&quot;nameToAge\&quot;,\&quot;outputs\&quot;:[{\&quot;internalType\&quot;:\&quot;uint256\&quot;,\&quot;name\&quot;:\&quot;\&quot;,\&quot;type\&quot;:\&quot;uint256\&quot;}],\&quot;stateMutability\&quot;:\&quot;view\&quot;,\&quot;type\&quot;:\&quot;function\&quot;},{\&quot;inputs\&quot;:[{\&quot;internalType\&quot;:\&quot;uint256\&quot;,\&quot;name\&quot;:\&quot;\&quot;,\&quot;type\&quot;:\&quot;uint256\&quot;}],\&quot;name\&quot;:\&quot;people\&quot;,\&quot;outputs\&quot;:[{\&quot;internalType\&quot;:\&quot;string\&quot;,\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;internalType\&quot;:\&quot;uint256\&quot;,\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;uint256\&quot;}],\&quot;stateMutability\&quot;:\&quot;view\&quot;,\&quot;type\&quot;:\&quot;function\&quot;},{\&quot;inputs\&quot;:[],\&quot;name\&quot;:\&quot;retrieve\&quot;,\&quot;outputs\&quot;:[{\&quot;internalType\&quot;:\&quot;uint256\&quot;,\&quot;name\&quot;:\&quot;\&quot;,\&quot;type\&quot;:\&quot;uint256\&quot;}],\&quot;stateMutability\&quot;:\&quot;view\&quot;,\&quot;type\&quot;:\&quot;function\&quot;},{\&quot;inputs\&quot;:[{\&quot;internalType\&quot;:\&quot;uint256\&quot;,\&quot;name\&quot;:\&quot;_number\&quot;,\&quot;type\&quot;:\&quot;uint256\&quot;}],\&quot;name\&quot;:\&quot;store\&quot;,\&quot;outputs\&quot;:[],\&quot;stateMutability\&quot;:\&quot;nonpayable\&quot;,\&quot;type\&quot;:\&quot;function\&quot;}],\&quot;devdoc\&quot;:{\&quot;methods\&quot;:{}},\&quot;userdoc\&quot;:{\&quot;methods\&quot;:{}}},\&quot;settings\&quot;:{\&quot;compilationTarget\&quot;:{\&quot;SimpleStorage.sol\&quot;:\&quot;SimpleStorage\&quot;},\&quot;evmVersion\&quot;:\&quot;istanbul\&quot;,\&quot;libraries\&quot;:{},\&quot;metadata\&quot;:{\&quot;bytecodeHash\&quot;:\&quot;ipfs\&quot;},\&quot;optimizer\&quot;:{\&quot;enabled\&quot;:false,\&quot;runs\&quot;:200},\&quot;remappings\&quot;:[]},\&quot;sources\&quot;:{\&quot;SimpleStorage.sol\&quot;:{\&quot;keccak256\&quot;:\&quot;0xb11711c64caefb78b120cd8256db30671152a5d3876985bb4ca130279483606a\&quot;,\&quot;urls\&quot;:[\&quot;bzz-raw://5f997a4db547a6d33f142503a952bbe1a790ea9f8688a33396ca61b6a2a5cca2\&quot;,\&quot;dweb:/ipfs/QmUWGUYe32RLXvryLXgjBTTQdFK9CGVDjwP1C7kRBrMgvN\&quot;]}},\&quot;version\&quot;:1}&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;sources&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;SimpleStorage.sol&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="deploying-in-python">
+<h1>Deploying in python<a class="headerlink" href="#deploying-in-python" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p>In order to deploy a smart contract in python, we first have to get the <strong>bytecode</strong> and the <strong>abi</strong>. We can check the <strong>JSON</strong> compiled code to see how we can access both of them.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">solcx</span>
+<span class="n">solcx</span><span class="o">.</span><span class="n">install_solc</span><span class="p">(</span><span class="s1">&#39;0.6.0&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">solcx</span> <span class="kn">import</span> <span class="n">compile_standard</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1"># Open the solidity file and store</span>
+<span class="c1"># its content as a variable</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./SimpleStorage.sol&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">simple_storage_file</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="c1"># save the compiled solidity code to a variable</span>
+<span class="n">input_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;language&quot;</span><span class="p">:</span><span class="s2">&quot;Solidity&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;sources&quot;</span><span class="p">:{</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">simple_storage_file</span><span class="p">}},</span>
+                          <span class="s2">&quot;settings&quot;</span><span class="p">:{</span>
+
+                          <span class="s2">&quot;outputSelection&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;abi&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="s2">&quot;evm.bytecode&quot;</span><span class="p">,</span> <span class="s2">&quot;evm.sourceMap&quot;</span><span class="p">]</span> <span class="p">}</span> <span class="p">}</span>
+                                                 <span class="p">}</span>
+                         <span class="p">}</span>
+<span class="n">compiled_sol</span> <span class="o">=</span> <span class="n">compile_standard</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">solc_version</span> <span class="o">=</span> <span class="s2">&quot;0.6.0&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;compiled_code.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">compiled_sol</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+
+<span class="c1"># Get the bytecode</span>
+<span class="n">bytecode</span> <span class="o">=</span> <span class="n">compiled_sol</span><span class="p">[</span><span class="s2">&quot;contracts&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage&quot;</span><span class="p">][</span><span class="s2">&quot;evm&quot;</span><span class="p">][</span><span class="s2">&quot;bytecode&quot;</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
+
+<span class="c1"># Get the abi</span>
+<span class="n">abi</span> <span class="o">=</span> <span class="n">compiled_sol</span><span class="p">[</span><span class="s2">&quot;contracts&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage&quot;</span><span class="p">][</span><span class="s2">&quot;abi&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Now that we have both the bytecode and the abi, we are ready to deploy this smart contract to a blockchain. However, in REMIX IDE, we were used to work with either a testnet or a simulated VM. How can we do this same thing outside of REMIX ?</p></li>
+<li><p>This is where <strong>Ganache</strong> comes into play !</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Ganache is a simulated (fake) blockchain that  we can use to deploy our smart contracts to and have it interact like it’s a real blockchain.</p></li>
+<li><p>Ganache creates a local blockchain, meaning that this blockchain isn’t connected to any other blockchain out there but it will act like a blockchain which will make it faster than us interacting with a testnet.</p></li>
+<li><p>With Ganache, we have control over the entire blockchain as we are the only node.</p></li>
+<li><p>There are 2 modes that can be used to work with <strong>Ganache</strong>, either a command line mode or an interface mode.</p></li>
+</ul>
+</div>
+<section id="connecting-to-ganache-web3-py">
+<h2>Connecting to ganache: Web3.py<a class="headerlink" href="#connecting-to-ganache-web3-py" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>In order to connect to Ganache blockchain, we need an HTTP provider. In ganache UI, we have an HTTP RPC server on top. This is the server where the fake ganache blockchain is. The url provided there is gonna be used to connect to the blockchain.</p></li>
+<li><p>In REMIX, our HTTP Provider is Metamask in case we were using a testnet for example.</p></li>
+<li><p>Syntax to connect to ganache blockchain:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># RPC Server</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s2">&quot;url_provided_by_ganache&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>We also need a ChainId, or the network ID: In my particular case, the ganache chain ID is “1337”.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># RPC Server and chain Id</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s2">&quot;url_provided_by_ganache&quot;</span><span class="p">))</span>
+<span class="n">chainId</span> <span class="o">=</span> <span class="mi">1337</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>We also gonna need an address to deploy from. In a javascript VM in REMIX, we were also given a bunch of addresses that we can use similarly to what ganache provides.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># RPC Server and chain Id and Address</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s2">&quot;url_provided_by_ganache&quot;</span><span class="p">))</span>
+<span class="n">chainId</span> <span class="o">=</span> <span class="mi">5777</span>
+<span class="n">my_address</span> <span class="o">=</span> <span class="s2">&quot;0x454C2e1AaF628A6F5e368Cd2926DAafa83DAf8D2&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>We need the <strong>private key</strong> corresponding to this address to sign our transactions. <strong>It should always begin with 0x so ADD IT if it wasn’t there,</strong> because Python will always look for the hexadecimal version of the private key.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># RPC Server and chain Id and Address</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s2">&quot;url_provided_by_ganache&quot;</span><span class="p">))</span>
+<span class="n">chainId</span> <span class="o">=</span> <span class="mi">5777</span>
+<span class="n">my_address</span> <span class="o">=</span> <span class="s2">&quot;0x454C2e1AaF628A6F5e368Cd2926DAafa83DAf8D2&quot;</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="s2">&quot;0x8ac4ac7d9003b1fd2afbaf30476699fb14f81918caae4ca47591b920d612d8d2&quot;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>PRIVATE KEYS MANAGEMENT</strong></p>
+<ul class="simple">
+<li><p>In order to protect our private key and since we are working with a conda dev environement, we can set the private key as an env-variable like this:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PRIVATE_KEY</span> <span class="o">=</span> <span class="s2">&quot;0x0000000000000000000000&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If we want our private key to be printed on terminal, we can type:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="nv">$PRIVATE_KEY</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Then is we want to call this variable from python: <code class="docutils literal notranslate"><span class="pre">os.getenv(&quot;PRIVATE_KEY&quot;)</span></code></p></li>
+<li><p>Alternatively, we can create a .env file and store the environement variables in this file. Then we can use the <strong>dotenv</strong> python package to load environement vars directly from the <code class="docutils literal notranslate"><span class="pre">.env</span></code> file. In case we did this, we can perhaps accidentaly push our .env to a github repo and if the private key was in the “.env” file, then we will be doing a huge mistake by giving everyone our private key. So, to prevent this accidental push, we should create in the same directory as .env and the rest of the project, a <strong>.gitignore</strong> file and add <strong>.env</strong> to that file. The syntax to be used in this case is:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Assuming we have .env file with a PRIVATE_KEY variable:</span>
+<span class="c1"># we load_dotenv:</span>
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="c1"># This command automatically looks for .env file and</span>
+<span class="c1"># loads the env variables that are thereon when called.</span>
+<span class="c1"># We load our private key the usual way:</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRIVATE_KEY&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>We will include a <strong>.env</strong> example file in the bottom of this page.</p></li>
+</ul>
+</div>
+<ul class="simple">
+<li><p>Now we have to create our contract and deploy it to ganache</p></li>
+<li><dl class="simple">
+<dt>In order to deploy the smart contract, we need to:</dt><dd><ul>
+<li><ol class="arabic simple">
+<li><p>build the transaction</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p>sign the transaction</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="3">
+<li><p>send the transaction</p></li>
+</ol>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>A transaction is a change of the state of the blockchain. So, each time we want to do change the state of the blockchain, we have to do it in a transaction.</p></li>
+<li><p>We are also going to need to the nonce. The nonce is actually just the number of transactions that our account have actually made. Everytime we make a new transaction, our transaction is hashed with a new nonce.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># RPC Server and chain Id and Address</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s2">&quot;url_provided_by_ganache&quot;</span><span class="p">))</span>
+<span class="n">chainId</span> <span class="o">=</span> <span class="mi">5777</span>
+<span class="n">my_address</span> <span class="o">=</span> <span class="s2">&quot;0x454C2e1AaF628A6F5e368Cd2926DAafa83DAf8D2&quot;</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="s2">&quot;0x8ac4ac7d9003b1fd2afbaf30476699fb14f81918caae4ca47591b920d612d8d2&quot;</span>
+
+<span class="c1"># Create the contract instance given an abi and a bytecode</span>
+<span class="n">SimpleStorage</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span><span class="n">bytecode</span><span class="o">=</span><span class="n">bytecode</span><span class="p">)</span>
+
+<span class="c1"># get the nonce of the transaction</span>
+<span class="c1"># ( = the latest transaction count)</span>
+<span class="n">nonce</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">getTransactionCount</span><span class="p">(</span><span class="n">my_address</span><span class="p">)</span>
+
+<span class="c1"># Create the transaction object</span>
+<span class="n">transaction_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;chainId&quot;</span><span class="p">:</span><span class="n">chainId</span><span class="p">,</span> <span class="s2">&quot;from&quot;</span><span class="p">:</span><span class="n">my_address</span><span class="p">,</span> <span class="s2">&quot;nonce&quot;</span><span class="p">:</span><span class="n">nonce</span><span class="p">}</span>
+<span class="n">transaction</span> <span class="o">=</span> <span class="n">SimpleStorage</span><span class="o">.</span><span class="n">constructor</span><span class="p">()</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">transaction_parameters</span><span class="p">)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Importante note:</span>
+
+<span class="sd">SimpleStorage doesn&#39;t actually have a constructor !</span>
+<span class="sd">Every contract however technically have a constructor.</span>
+
+<span class="sd">The FundMe example does have a constructor but for the</span>
+<span class="sd">sake of simplicity, the SimpleStorage.sol contract is</span>
+<span class="sd">blank and doesn&#39;t have a constructor.</span>
+
+<span class="sd">In addition, when creating the transaction object, we</span>
+<span class="sd">always have to pass some transaction parameters in web3.py</span>
+<span class="sd">which are the chainId, the adress of the sender, and the</span>
+<span class="sd">nonce</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Once we create the transaction object which we can print</span>
+<span class="c1"># and see, we should sign the transaction.</span>
+
+<span class="n">signed_txn</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">)</span>
+
+<span class="c1"># Note: The private key should be protected and not hardcoded</span>
+<span class="c1"># the way we did here.</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>In the following, we are going to use the “.env” private key storing method in our python script, but, in case we are using real money, no digital storing is recommended.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># RPC Server and chain Id and Address</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s2">&quot;url_provided_by_ganache&quot;</span><span class="p">))</span>
+<span class="n">chainId</span> <span class="o">=</span> <span class="mi">5777</span>
+<span class="n">my_address</span> <span class="o">=</span> <span class="s2">&quot;0xd13b9C18ef6376069bCB44f5878bfd8FbDe2dDC2&quot;</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRIVATE_KEY&quot;</span><span class="p">)</span>
+
+<span class="n">SimpleStorage</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span><span class="n">bytecode</span><span class="o">=</span><span class="n">bytecode</span><span class="p">)</span>
+
+<span class="n">nonce</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">getTransactionCount</span><span class="p">(</span><span class="n">my_address</span><span class="p">)</span>
+
+<span class="c1"># Create the transaction object</span>
+<span class="n">transaction_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;chainId&quot;</span><span class="p">:</span><span class="n">chainId</span><span class="p">,</span> <span class="s2">&quot;from&quot;</span><span class="p">:</span><span class="n">my_address</span><span class="p">,</span> <span class="s2">&quot;nonce&quot;</span><span class="p">:</span><span class="n">nonce</span><span class="p">}</span>
+<span class="n">transaction</span> <span class="o">=</span> <span class="n">SimpleStorage</span><span class="o">.</span><span class="n">constructor</span><span class="p">()</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">transaction_parameters</span><span class="p">)</span>
+
+<span class="n">signed_txn</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">)</span>
+
+<span class="c1"># Send the signed transaction to the blockchain</span>
+<span class="n">tx_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed_txn</span><span class="o">.</span><span class="n">rawTransation</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Another good practice is waiting for block confirmations to happen. In order to do so, we can use the <code class="docutils literal notranslate"><span class="pre">wait_for_transaction_receipt</span></code> method.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># RPC Server and chain Id and Address</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s2">&quot;http://127.0.0.1:7545&quot;</span><span class="p">))</span>
+<span class="n">chainId</span> <span class="o">=</span> <span class="mi">1337</span>
+<span class="n">my_address</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PUBLIC_KEY&quot;</span><span class="p">)</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRIVATE_KEY&quot;</span><span class="p">)</span>
+
+<span class="n">SimpleStorage</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span><span class="n">bytecode</span><span class="o">=</span><span class="n">bytecode</span><span class="p">)</span>
+
+<span class="n">nonce</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">getTransactionCount</span><span class="p">(</span><span class="n">my_address</span><span class="p">)</span>
+
+<span class="c1"># Create the transaction object</span>
+<span class="n">transaction_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;gasPrice&quot;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">gas_price</span><span class="p">,</span> <span class="s2">&quot;chainId&quot;</span><span class="p">:</span><span class="n">chainId</span><span class="p">,</span> <span class="s2">&quot;from&quot;</span><span class="p">:</span><span class="n">my_address</span><span class="p">,</span> <span class="s2">&quot;nonce&quot;</span><span class="p">:</span><span class="n">nonce</span><span class="p">}</span>
+<span class="n">transaction</span> <span class="o">=</span> <span class="n">SimpleStorage</span><span class="o">.</span><span class="n">constructor</span><span class="p">()</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">transaction_parameters</span><span class="p">)</span>
+
+<span class="c1"># Sign the transaction</span>
+<span class="n">signed_txn</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">)</span>
+
+<span class="c1"># Send the signed transaction to the blockchain</span>
+<span class="n">tx_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed_txn</span><span class="o">.</span><span class="n">rawTransaction</span><span class="p">)</span>
+
+<span class="c1"># Waiting for block confirmations:</span>
+<span class="n">tx_receipt</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">wait_for_transaction_receipt</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="interacting-with-the-contract-after-deployment">
+<h1>Interacting with the contract after deployment<a class="headerlink" href="#interacting-with-the-contract-after-deployment" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p>In order to interact with a contract, we need the contract ABI and the contract address. We can initialize our <strong>deployed</strong> contract like so:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simple_storage</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">address</span> <span class="o">=</span> <span class="n">tx_receipt</span><span class="o">.</span><span class="n">contractAddress</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>We must note here that we can access the contract address through <code class="docutils literal notranslate"><span class="pre">tx_receipt</span></code>.</p></li>
+<li><p>Now we can interact with all the functions that are defined inside the deployed contract. In REMIX IDE, when we deploy a contract, we get buttons corresponding to the different public variables and functions. As a reminder, a blue button correponds to a view function, an orange function correponds to a function that we can transact on, and a red button corresponds to a payable function.</p></li>
+<li><p>In Python, we don’t have buttons. Instead, we can use a function of the smart contract by using either a call method (if it was a view function) or a transact method (if it was a function that will change the state of a blockchain).</p></li>
+<li><p>Example for the view function “retrieve()”:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">retrieve_output</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">retrieve</span><span class="p">()</span><span class="o">.</span><span class="n">call</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">retrieve_output</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Example for the transaction function “store()”.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">store_value</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">transaction_parameters</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>At this point, the transaction didn’t go through yet. We need to sign it, then we need to send it. Only then we can retrieve the stored value. One important note is that the nonce should be the next <code class="docutils literal notranslate"><span class="pre">nonce</span></code>, that is <code class="docutils literal notranslate"><span class="pre">nonce</span> <span class="pre">+</span> <span class="pre">1</span></code> in the transaction parameters, as it is obvious that the nonce can be defined in a unique way to every signle transactionand no two transactions can have the same nonce.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Now let&#39;s store a value and try to retrieve it:</span>
+<span class="n">transaction_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;gasPrice&quot;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">gas_price</span><span class="p">,</span> <span class="s2">&quot;chainId&quot;</span><span class="p">:</span><span class="n">chainId</span><span class="p">,</span> <span class="s2">&quot;from&quot;</span><span class="p">:</span><span class="n">my_address</span><span class="p">,</span> <span class="s2">&quot;nonce&quot;</span><span class="p">:</span><span class="n">nonce</span><span class="o">+</span><span class="mi">1</span><span class="p">}</span>
+
+<span class="c1"># we use nonce + 1 bcs nonce has already been used</span>
+<span class="n">store_value</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">transaction_parameters</span><span class="p">)</span>
+<span class="n">signed_store_value</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">store_value</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">)</span>
+<span class="n">store_value_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed_store_value</span><span class="o">.</span><span class="n">rawTransaction</span><span class="p">)</span>
+<span class="n">store_value_receipt</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">wait_for_transaction_receipt</span><span class="p">(</span><span class="n">store_value_hash</span><span class="p">)</span>
+
+<span class="n">output_retrieve</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">retrieve</span><span class="p">()</span><span class="o">.</span><span class="n">call</span><span class="p">()</span> <span class="c1"># we use call as it is a view function</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">output_retrieve</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>We conclude this part giving the whole code:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">deploy_simple_storage_UI.py</span>
+<span class="sd">Author = &quot;Mouloud Bahae eddine&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">solcx</span><span class="o">,</span> <span class="nn">os</span>
+<span class="n">solcx</span><span class="o">.</span><span class="n">install_solc</span><span class="p">(</span><span class="s1">&#39;0.6.0&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">solcx</span> <span class="kn">import</span> <span class="n">compile_standard</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">web3</span> <span class="kn">import</span> <span class="n">Web3</span>
+
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="c1"># Open the solidity file and store</span>
+<span class="c1"># its content as a variable</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./SimpleStorage.sol&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">simple_storage_file</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="c1"># save the compiled solidity code to a variable</span>
+<span class="n">input_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;language&quot;</span><span class="p">:</span><span class="s2">&quot;Solidity&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;sources&quot;</span><span class="p">:{</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">simple_storage_file</span><span class="p">}},</span>
+                          <span class="s2">&quot;settings&quot;</span><span class="p">:{</span>
+
+                          <span class="s2">&quot;outputSelection&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;abi&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="s2">&quot;evm.bytecode&quot;</span><span class="p">,</span> <span class="s2">&quot;evm.sourceMap&quot;</span><span class="p">]</span> <span class="p">}</span> <span class="p">}</span>
+                                                 <span class="p">}</span>
+                         <span class="p">}</span>
+<span class="n">compiled_sol</span> <span class="o">=</span> <span class="n">compile_standard</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">solc_version</span> <span class="o">=</span> <span class="s2">&quot;0.6.0&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;compiled_code.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">compiled_sol</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+
+<span class="c1"># Get the bytecode</span>
+<span class="n">bytecode</span> <span class="o">=</span> <span class="n">compiled_sol</span><span class="p">[</span><span class="s2">&quot;contracts&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage&quot;</span><span class="p">][</span><span class="s2">&quot;evm&quot;</span><span class="p">][</span><span class="s2">&quot;bytecode&quot;</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
+
+<span class="c1"># Get the abi</span>
+<span class="n">abi</span> <span class="o">=</span> <span class="n">compiled_sol</span><span class="p">[</span><span class="s2">&quot;contracts&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage&quot;</span><span class="p">][</span><span class="s2">&quot;abi&quot;</span><span class="p">]</span>
+
+<span class="c1"># RPC Server and chain Id and Address</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s2">&quot;http://127.0.0.1:7545&quot;</span><span class="p">))</span>
+<span class="n">chainId</span> <span class="o">=</span> <span class="mi">1337</span>
+<span class="n">my_address</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PUBLIC_KEY&quot;</span><span class="p">)</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRIVATE_KEY&quot;</span><span class="p">)</span>
+
+<span class="n">SimpleStorage</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span><span class="n">bytecode</span><span class="o">=</span><span class="n">bytecode</span><span class="p">)</span>
+
+<span class="n">nonce</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">getTransactionCount</span><span class="p">(</span><span class="n">my_address</span><span class="p">)</span>
+
+<span class="c1"># Create the transaction object</span>
+<span class="n">transaction_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;gasPrice&quot;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">gas_price</span><span class="p">,</span> <span class="s2">&quot;chainId&quot;</span><span class="p">:</span><span class="n">chainId</span><span class="p">,</span> <span class="s2">&quot;from&quot;</span><span class="p">:</span><span class="n">my_address</span><span class="p">,</span> <span class="s2">&quot;nonce&quot;</span><span class="p">:</span><span class="n">nonce</span><span class="p">}</span>
+<span class="n">transaction</span> <span class="o">=</span> <span class="n">SimpleStorage</span><span class="o">.</span><span class="n">constructor</span><span class="p">()</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">transaction_parameters</span><span class="p">)</span>
+
+<span class="c1"># Sign the transaction</span>
+<span class="n">signed_txn</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">)</span>
+
+<span class="c1"># Send the signed transaction to the blockchain</span>
+<span class="n">tx_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed_txn</span><span class="o">.</span><span class="n">rawTransaction</span><span class="p">)</span>
+
+<span class="c1"># Waiting for block confirmations:</span>
+<span class="n">tx_receipt</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">wait_for_transaction_receipt</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+
+<span class="c1"># define the compiled smart contract to strat interacting with it:</span>
+<span class="c1"># we need the contract address and its abi</span>
+<span class="n">simple_storage</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">tx_receipt</span><span class="o">.</span><span class="n">contractAddress</span><span class="p">,</span> <span class="n">abi</span> <span class="o">=</span> <span class="n">abi</span><span class="p">)</span>
+
+<span class="c1"># output the resukt of the retrieve() function of simple storage for example:</span>
+<span class="n">output_retrieve</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">retrieve</span><span class="p">()</span><span class="o">.</span><span class="n">call</span><span class="p">()</span> <span class="c1"># we use call as it is a view function</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">output_retrieve</span><span class="p">)</span>
+
+<span class="c1"># Now let&#39;s store a value and try to retrieve it:</span>
+<span class="n">transaction_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;gasPrice&quot;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">gas_price</span><span class="p">,</span> <span class="s2">&quot;chainId&quot;</span><span class="p">:</span><span class="n">chainId</span><span class="p">,</span> <span class="s2">&quot;from&quot;</span><span class="p">:</span><span class="n">my_address</span><span class="p">,</span> <span class="s2">&quot;nonce&quot;</span><span class="p">:</span><span class="n">nonce</span><span class="o">+</span><span class="mi">1</span><span class="p">}</span>
+<span class="c1"># we use nonce + 1 bcs nonce has already been used</span>
+<span class="n">store_value</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">transaction_parameters</span><span class="p">)</span>
+<span class="n">signed_store_value</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">store_value</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">)</span>
+<span class="n">store_value_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed_store_value</span><span class="o">.</span><span class="n">rawTransaction</span><span class="p">)</span>
+<span class="n">store_value_receipt</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">wait_for_transaction_receipt</span><span class="p">(</span><span class="n">store_value_hash</span><span class="p">)</span>
+
+<span class="n">output_retrieve</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">retrieve</span><span class="p">()</span><span class="o">.</span><span class="n">call</span><span class="p">()</span> <span class="c1"># we use call as it is a view function</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">output_retrieve</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ganache-in-command-line-mode">
+<h1>Ganache in command line mode<a class="headerlink" href="#ganache-in-command-line-mode" title="Permalink to this headline"></a></h1>
+<ul>
+<li><p>Ganache UI is good, but ganache-cli (which is the command line version) is even better. We can install ganache-cli in linux in the following steps:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">nodejs</span></code> —&gt; This will install nodejs package.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">npm</span></code> –&gt; This will install npm.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">npm</span> <span class="pre">install</span> <span class="pre">--global</span> <span class="pre">yarn</span></code> –&gt; This will install yarn package.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">yarn</span> <span class="pre">global</span> <span class="pre">add</span> <span class="pre">ganache-cli</span></code> –&gt; This will install ganache-cli with yarn.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Now we can run a local blockchain from the command line. To do so, we run <code class="docutils literal notranslate"><span class="pre">ganache-cli</span></code>. This will provide us with a local blockchain that runs in our local machine via the terminal with all what we need to deploy contracts and interact with them such as the available accounts, the private keys etc…</p></li>
+<li><p>An additional feature in the command line mode is that, we can fix the addresses and private keys. These are randomely generated when calling Ganache, but if we want to always fix them to certain values so that we don’t update our code each time with new addresses and private keys, we can do so by calling ganache in the following way: <code class="docutils literal notranslate"><span class="pre">ganache-cli</span> <span class="pre">--deterministic</span></code> or <code class="docutils literal notranslate"><span class="pre">ganache-cli</span> <span class="pre">-d</span></code>.</p></li>
+<li><p>Now we can run the same “depoly” script to start interacting with the smart contract. All we have to change is the HTTP provider to be that of the localhost provided by the cli and the address and private key.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># deploy_simple_storage_ganache-cli.py</span>
+
+<span class="kn">import</span> <span class="nn">solcx</span><span class="o">,</span> <span class="nn">os</span>
+<span class="n">solcx</span><span class="o">.</span><span class="n">install_solc</span><span class="p">(</span><span class="s1">&#39;0.6.0&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">solcx</span> <span class="kn">import</span> <span class="n">compile_standard</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">web3</span> <span class="kn">import</span> <span class="n">Web3</span>
+
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="c1"># Open the solidity file and store</span>
+<span class="c1"># its content as a variable</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./SimpleStorage.sol&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">simple_storage_file</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="c1"># save the compiled solidity code to a variable</span>
+<span class="n">input_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;language&quot;</span><span class="p">:</span><span class="s2">&quot;Solidity&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;sources&quot;</span><span class="p">:{</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">simple_storage_file</span><span class="p">}},</span>
+                          <span class="s2">&quot;settings&quot;</span><span class="p">:{</span>
+
+                          <span class="s2">&quot;outputSelection&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;abi&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="s2">&quot;evm.bytecode&quot;</span><span class="p">,</span> <span class="s2">&quot;evm.sourceMap&quot;</span><span class="p">]</span> <span class="p">}</span> <span class="p">}</span>
+                                                 <span class="p">}</span>
+                         <span class="p">}</span>
+<span class="n">compiled_sol</span> <span class="o">=</span> <span class="n">compile_standard</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">solc_version</span> <span class="o">=</span> <span class="s2">&quot;0.6.0&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;compiled_code.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">compiled_sol</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+
+<span class="c1"># Get the bytecode</span>
+<span class="n">bytecode</span> <span class="o">=</span> <span class="n">compiled_sol</span><span class="p">[</span><span class="s2">&quot;contracts&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage&quot;</span><span class="p">][</span><span class="s2">&quot;evm&quot;</span><span class="p">][</span><span class="s2">&quot;bytecode&quot;</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
+
+<span class="c1"># Get the abi</span>
+<span class="n">abi</span> <span class="o">=</span> <span class="n">compiled_sol</span><span class="p">[</span><span class="s2">&quot;contracts&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage&quot;</span><span class="p">][</span><span class="s2">&quot;abi&quot;</span><span class="p">]</span>
+
+<span class="c1"># RPC Server and chain Id and Address</span>
+<span class="n">HTTP_PROVIDER</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;HTTP_PROVIDER&quot;</span><span class="p">)</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="n">HTTP_PROVIDER</span><span class="p">))</span>
+<span class="n">chainId</span> <span class="o">=</span> <span class="mi">1337</span>
+<span class="n">my_address</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PUBLIC_KEY&quot;</span><span class="p">)</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRIVATE_KEY&quot;</span><span class="p">)</span>
+
+<span class="n">SimpleStorage</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span><span class="n">bytecode</span><span class="o">=</span><span class="n">bytecode</span><span class="p">)</span>
+
+<span class="n">nonce</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">getTransactionCount</span><span class="p">(</span><span class="n">my_address</span><span class="p">)</span>
+
+<span class="c1"># Create the transaction object</span>
+<span class="n">transaction_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;gasPrice&quot;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">gas_price</span><span class="p">,</span> <span class="s2">&quot;chainId&quot;</span><span class="p">:</span><span class="n">chainId</span><span class="p">,</span> <span class="s2">&quot;from&quot;</span><span class="p">:</span><span class="n">my_address</span><span class="p">,</span> <span class="s2">&quot;nonce&quot;</span><span class="p">:</span><span class="n">nonce</span><span class="p">}</span>
+<span class="n">transaction</span> <span class="o">=</span> <span class="n">SimpleStorage</span><span class="o">.</span><span class="n">constructor</span><span class="p">()</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">transaction_parameters</span><span class="p">)</span>
+
+<span class="c1"># Sign the transaction</span>
+<span class="n">signed_txn</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">)</span>
+
+<span class="c1"># Send the signed transaction to the blockchain</span>
+<span class="n">tx_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed_txn</span><span class="o">.</span><span class="n">rawTransaction</span><span class="p">)</span>
+
+<span class="c1"># Waiting for block confirmations:</span>
+<span class="n">tx_receipt</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">wait_for_transaction_receipt</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+
+<span class="c1"># define the compiled smart contract to strat interacting with it:</span>
+<span class="c1"># we need the contract address and its abi</span>
+<span class="n">simple_storage</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">tx_receipt</span><span class="o">.</span><span class="n">contractAddress</span><span class="p">,</span> <span class="n">abi</span> <span class="o">=</span> <span class="n">abi</span><span class="p">)</span>
+
+<span class="c1"># output the resukt of the retrieve() function of simple storage for example:</span>
+<span class="n">output_retrieve</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">retrieve</span><span class="p">()</span><span class="o">.</span><span class="n">call</span><span class="p">()</span> <span class="c1"># we use call as it is a view function</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">output_retrieve</span><span class="p">)</span>
+
+<span class="c1"># Now let&#39;s store a value and try to retrieve it:</span>
+<span class="n">transaction_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;gasPrice&quot;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">gas_price</span><span class="p">,</span> <span class="s2">&quot;chainId&quot;</span><span class="p">:</span><span class="n">chainId</span><span class="p">,</span> <span class="s2">&quot;from&quot;</span><span class="p">:</span><span class="n">my_address</span><span class="p">,</span> <span class="s2">&quot;nonce&quot;</span><span class="p">:</span><span class="n">nonce</span><span class="o">+</span><span class="mi">1</span><span class="p">}</span>
+<span class="c1"># we use nonce + 1 bcs nonce has already been used</span>
+<span class="n">store_value</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">transaction_parameters</span><span class="p">)</span>
+<span class="n">signed_store_value</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">store_value</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">)</span>
+<span class="n">store_value_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed_store_value</span><span class="o">.</span><span class="n">rawTransaction</span><span class="p">)</span>
+<span class="n">store_value_receipt</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">wait_for_transaction_receipt</span><span class="p">(</span><span class="n">store_value_hash</span><span class="p">)</span>
+
+<span class="n">output_retrieve</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">retrieve</span><span class="p">()</span><span class="o">.</span><span class="n">call</span><span class="p">()</span> <span class="c1"># we use call as it is a view function</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">output_retrieve</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>We can also connect to a testnet or a mainnet, all we have to do is setting the appropriate HTTP provider, the address, the private key as well as the chainId. We have many options here, we can either run a local node and connect to it =&gt; We can run our own blockchain (difficult to do). Or, we can use third-party clients to run a blockchain for us (like infura.io or alchemy.com).</p></li>
+<li><p>If we’re going to use Infura for example, we first have to create an account, then, infura will provide us with the necessary http url of a blockchain. [HTTP ✔✔]</p></li>
+<li><p>Any chainID can be found in the <strong>chainlist.org</strong> website. For a <strong>Rinkeby testnet</strong> for example, the chainID is 4. [chainid ✔✔]</p></li>
+<li><p>We need the public and private keys in order to interact with a test or mainnet =&gt; We can simply get them from Metamask [keys ✔✔]</p></li>
+<li><p>Example script with an infura provided blockchain with a Rinkeby testnet.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># deploy_infura.py</span>
+
+<span class="kn">import</span> <span class="nn">solcx</span><span class="o">,</span> <span class="nn">os</span>
+<span class="n">solcx</span><span class="o">.</span><span class="n">install_solc</span><span class="p">(</span><span class="s1">&#39;0.6.0&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">solcx</span> <span class="kn">import</span> <span class="n">compile_standard</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">web3</span> <span class="kn">import</span> <span class="n">Web3</span>
+
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="c1"># Open the solidity file and store</span>
+<span class="c1"># its content as a variable</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./SimpleStorage.sol&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">simple_storage_file</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="c1"># save the compiled solidity code to a variable</span>
+<span class="n">input_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;language&quot;</span><span class="p">:</span><span class="s2">&quot;Solidity&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;sources&quot;</span><span class="p">:{</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">simple_storage_file</span><span class="p">}},</span>
+                          <span class="s2">&quot;settings&quot;</span><span class="p">:{</span>
+
+                          <span class="s2">&quot;outputSelection&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;abi&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="s2">&quot;evm.bytecode&quot;</span><span class="p">,</span> <span class="s2">&quot;evm.sourceMap&quot;</span><span class="p">]</span> <span class="p">}</span> <span class="p">}</span>
+                                                 <span class="p">}</span>
+                         <span class="p">}</span>
+<span class="n">compiled_sol</span> <span class="o">=</span> <span class="n">compile_standard</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">solc_version</span> <span class="o">=</span> <span class="s2">&quot;0.6.0&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;compiled_code.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">compiled_sol</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+
+<span class="c1"># Get the bytecode</span>
+<span class="n">bytecode</span> <span class="o">=</span> <span class="n">compiled_sol</span><span class="p">[</span><span class="s2">&quot;contracts&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage&quot;</span><span class="p">][</span><span class="s2">&quot;evm&quot;</span><span class="p">][</span><span class="s2">&quot;bytecode&quot;</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
+
+<span class="c1"># Get the abi</span>
+<span class="n">abi</span> <span class="o">=</span> <span class="n">compiled_sol</span><span class="p">[</span><span class="s2">&quot;contracts&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage.sol&quot;</span><span class="p">][</span><span class="s2">&quot;SimpleStorage&quot;</span><span class="p">][</span><span class="s2">&quot;abi&quot;</span><span class="p">]</span>
+
+<span class="c1"># RPC Server and chain Id and Address</span>
+<span class="n">HTTP_PROVIDER</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;HTTP_PROVIDER_INFURA&quot;</span><span class="p">)</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="n">HTTP_PROVIDER</span><span class="p">))</span>
+<span class="n">chainId</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;RINKEBY_CHAIN_ID&quot;</span><span class="p">))</span>
+<span class="n">my_address</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PUBLIC_KEY_RINKEBY_METAMASK&quot;</span><span class="p">)</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRIVATE_KEY_RINKEBY_METAMASK&quot;</span><span class="p">)</span>
+
+<span class="n">SimpleStorage</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span><span class="n">bytecode</span><span class="o">=</span><span class="n">bytecode</span><span class="p">)</span>
+
+<span class="n">nonce</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">getTransactionCount</span><span class="p">(</span><span class="n">my_address</span><span class="p">)</span>
+
+<span class="c1"># Create the transaction object</span>
+<span class="n">transaction_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;gasPrice&quot;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">gas_price</span><span class="p">,</span> <span class="s2">&quot;chainId&quot;</span><span class="p">:</span><span class="n">chainId</span><span class="p">,</span> <span class="s2">&quot;from&quot;</span><span class="p">:</span><span class="n">my_address</span><span class="p">,</span> <span class="s2">&quot;nonce&quot;</span><span class="p">:</span><span class="n">nonce</span><span class="p">}</span>
+<span class="n">transaction</span> <span class="o">=</span> <span class="n">SimpleStorage</span><span class="o">.</span><span class="n">constructor</span><span class="p">()</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">transaction_parameters</span><span class="p">)</span>
+
+<span class="c1"># Sign the transaction</span>
+<span class="n">signed_txn</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Deploying the contract...&quot;</span><span class="p">)</span>
+<span class="c1"># Send the signed transaction to the blockchain</span>
+<span class="n">tx_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed_txn</span><span class="o">.</span><span class="n">rawTransaction</span><span class="p">)</span>
+
+<span class="c1"># Waiting for block confirmations:</span>
+<span class="n">tx_receipt</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">wait_for_transaction_receipt</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Contract deployed...&quot;</span><span class="p">)</span>
+<span class="c1"># define the compiled smart contract to strat interacting with it:</span>
+<span class="c1"># we need the contract address and its abi</span>
+<span class="n">simple_storage</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">tx_receipt</span><span class="o">.</span><span class="n">contractAddress</span><span class="p">,</span> <span class="n">abi</span> <span class="o">=</span> <span class="n">abi</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">A view function call (must return 0 in this case).... &quot;</span><span class="p">)</span>
+<span class="c1"># output the resukt of the retrieve() function of simple storage for example:</span>
+<span class="n">output_retrieve</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">retrieve</span><span class="p">()</span><span class="o">.</span><span class="n">call</span><span class="p">()</span> <span class="c1"># we use call as it is a view function</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;output of retrieve function: &quot;</span><span class="p">,</span> <span class="n">output_retrieve</span><span class="p">)</span>
+
+
+<span class="c1"># Now let&#39;s store a value and try to retrieve it:</span>
+<span class="n">transaction_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;gasPrice&quot;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">gas_price</span><span class="p">,</span> <span class="s2">&quot;chainId&quot;</span><span class="p">:</span><span class="n">chainId</span><span class="p">,</span> <span class="s2">&quot;from&quot;</span><span class="p">:</span><span class="n">my_address</span><span class="p">,</span> <span class="s2">&quot;nonce&quot;</span><span class="p">:</span><span class="n">nonce</span><span class="o">+</span><span class="mi">1</span><span class="p">}</span>
+<span class="c1"># we use nonce + 1 bcs nonce has already been used</span>
+<span class="n">store_value</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">buildTransaction</span><span class="p">(</span><span class="n">transaction_parameters</span><span class="p">)</span>
+<span class="n">signed_store_value</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">store_value</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">sending a transaction to store a value...&quot;</span><span class="p">)</span>
+<span class="n">store_value_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed_store_value</span><span class="o">.</span><span class="n">rawTransaction</span><span class="p">)</span>
+<span class="n">store_value_receipt</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">wait_for_transaction_receipt</span><span class="p">(</span><span class="n">store_value_hash</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Transaction sent: Success...&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">A view function call (must return 15 in this case): &quot;</span><span class="p">)</span>
+<span class="c1"># output the resukt of the retrieve() function of simple storage for example:</span>
+<span class="n">output_retrieve</span> <span class="o">=</span> <span class="n">simple_storage</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">retrieve</span><span class="p">()</span><span class="o">.</span><span class="n">call</span><span class="p">()</span> <span class="c1"># we use call as it is a view function</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;output of retrieve function: &quot;</span><span class="p">,</span> <span class="n">output_retrieve</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Success 🏆 ... You can check on Rinkeby etherscan and your metamask wallet.... &quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="example-files">
+<h1>Example files<a class="headerlink" href="#example-files" title="Permalink to this headline"></a></h1>
+<section id="env-example-file">
+<h2>“.env” example file<a class="headerlink" href="#env-example-file" title="Permalink to this headline"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example working with ganache</span>
+<span class="nv">PUBLIC_KEY</span> <span class="o">=</span> <span class="s2">&quot;0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1&quot;</span>
+<span class="nv">PRIVATE_KEY</span> <span class="o">=</span> <span class="s2">&quot;0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d&quot;</span>
+<span class="nv">HTTP_PROVIDER</span> <span class="o">=</span> <span class="s2">&quot;http://127.0.0.1:8545&quot;</span>
+<span class="nv">GANACHE_CHAIN_ID</span> <span class="o">=</span> <span class="m">1337</span>
+
+<span class="c1"># Example working with infura</span>
+<span class="nv">HTTP_PROVIDER_INFURA</span> <span class="o">=</span> <span class="s2">&quot;https://rinkeby.infura.io/v3/74eec412a7cb4c378ee826ae699dc7bc&quot;</span>
+<span class="nv">RINKEBY_CHAIN_ID</span> <span class="o">=</span> <span class="m">4</span>
+<span class="nv">PUBLIC_KEY_RINKEBY_METAMASK</span> <span class="o">=</span> <span class="s2">&quot;0x44Ee91Bded46d0B5B13845124ca949F4f048Ed64&quot;</span> <span class="c1"># FROM METAMASK</span>
+<span class="nv">PRIVATE_KEY_RINKEBY_METAMASK</span> <span class="o">=</span> <span class="s2">&quot;0xd96878979409f342bae19f4d68c293e108c9c67db0a92c4183bc624e574d4987&quot;</span><span class="c1"># FROM METAMASK</span>
+</pre></div>
+</div>
+</section>
+<section id="gitignore-example-file">
+<h2>“.gitignore” example file<a class="headerlink" href="#gitignore-example-file" title="Permalink to this headline"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.env
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Introduction to “Web3.py”" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Mouloud Bahae-eddine.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
