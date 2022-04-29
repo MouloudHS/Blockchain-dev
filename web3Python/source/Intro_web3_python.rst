@@ -828,3 +828,406 @@ Brownie 🥧
 ==========
 
 - Brownie is currently the most populat smart contract developpment plateform built based on python. It is used by DeFi giants such as `yearn.finance`, `curve.fi`, `badger.finance` etc... Brownie is built on top of Web3.py.
+
+- In order to install ``brownie``, the most recommened way is to use "pipx":
+
+	- ``pipx`` installs Brownie into a virtual environment and makes it available directly from the commandline. Once installed, you will never have to activate a virtual environment prior to using Brownie.
+	``python3 -m pip install --user pipx``
+	``python3 -m pipx ensurepath``.
+
+	- When we are done with these two, we can close and reopen the terminal and type: 
+	``pipx install eth-brownie``.
+
+	- We close and reopen the terminal and now everything is well established.
+
+- In order to initialize a project in brownie, we create a directory for our project and we type in the terminal: ``brownie init``. This will create a bunch of directories inside the directory we're currently in:
+
+	- "build" directory: keeps track of all the interfaces we are working with (through the `interfaces` subdir), all of our deployments across different chains (through the `deployments` subdir) and it's gonna store all of the compiled code (through the `contracts` subdir).
+
+	- "contracts" directory: where we're gonna store our solidity contracts.
+
+	- "Interfaces" directory: It is where we are going to store our interfaces
+
+	- "scripts" directory is where we store our scripts that automate tasks.
+
+	- "tests" directory: For performing tests.
+
+- Brownie can be used from the terminal as well as from python scripts. 
+
+- Compiling a smart contract
+
+	- As an example, if we take our ``simple_storage.sol`` and save it into the **contracts** folder, we can run ``brownie compile`` from the terminal. Brownie will automatically read the version of solidity and then store all of the compile information in the build folder.
+
+- Deployment:
+
+	- In order to deploy to the blockchain, we have to write a script that will allow us to do whatever we want and we will have to store it in the scripts directory. 
+
+	- Brownie runs a script from terminal with ``brownie run scripts/file.py``.
+
+	- Brownie will automatically spin up a local ganache chain by default to deploy to and turn it off at the end of the script if we don't give him a network to use. A local Ganache-cli blockchain is the default blockchain that brownie uses.
+
+	- A good tip here is to put the logic of our deployment in terms of functions.
+
+	- We must retrieve our account information, the public and private keys in order to do the deployment.
+
+- Working with accounts:
+
+	- Brownie has a native way to work with accounts through the ``accounts`` module and it is fantastic !
+
+		- If and only if we are working with ganache-CLI, we don't need to pass any public and private key as brownie natively understands what account we want to work with simply by passing its index in ganache:
+
+		.. code-block:: python 
+
+			# import accounts module
+			from brownie import accounts
+
+			# Select an account to work with
+			def deploy_simple_storage():
+				account = accounts[0] # the account at the 0-th index of ganache-cli
+				print(account)
+
+			# The function to be executed 
+			def main():
+				deploy_simple_storage()
+
+		- A second method is to define a new account in brownie through the commandline and then use it. Syntax: ``brownie accounts new account_1``. This method allow us to use not only ganache-cli but also Metamask accounts and password-encrypts the Private-Key !! **AND THIS IS THE MOST SECURE METHOD OF DEALING WITH PRIVATE KEYS**. Once created, we can list all of our accounts using ``brownie accounts list``. If we want to delete an account, we can use ``brownie accounts delete account_name``
+
+		.. code-block:: python
+
+			# import accounts module
+			from brownie import accounts
+
+			# Select an account to work with
+			def deploy_simple_storage():
+				account = accounts.load("account_name")
+				
+				# This time, this is a password encrypted account,
+				# When we will compile this script, it will 
+				# ask us for a password 
+				print(account) 
+				
+			# The function to be executed 
+			def main():
+				deploy_simple_storage()
+
+		- The third method is to use a brownie ``brownie-config.yaml`` file. This is a special file that brownie will always look for to grab information about where you gonna build, deploy and grab things. In this case, we need to tell ``brownie-config.yaml`` to look for the private key inside a specific``.env`` file.
+
+		.. code-block:: yaml
+
+			dotenv: .env 
+			# This will tell brownie that this is the right 
+			# location where you can grab your informations 
+			# from. 
+
+		.. code-block:: python
+
+			# To call the Private_key that is stored inside of
+			# the ``.env`` file for example, we use:
+			account = accounts.add(os.getenv("PRIVATE_KEY"))
+
+- The third method can be further improved, we can add in our ``brownie-config.yaml`` a wallets definition that have keys that point out to our differents private keys defined in .env environement:
+		
+	.. code-block:: yaml
+
+		dotenv: .env
+		wallets:
+			from_key: ${PRIVATE_KEY} 
+			# Note that the indentation is using spaces as 
+			# tabs are not allowed in a yaml file
+
+
+	.. code-block:: python
+
+		# To call the Private_key, we access it through:
+		from brownie import config
+		account = accounts.add(config["wallets"]["from_key"])
+		print(account)
+
+Deployment in Brownie
+----------------------
+
+- Brownie makes it very easy to deploy a smart contract to the blockchain. We can literally just import our smart contract directly from Brownie, and use the ``deploy()`` method that acts on imported contracts.
+
+- In the following example, we illustrate the use of the ``deploy()`` method.
+
+.. code-block:: python
+
+	# Brownie can import the solidity contract (SimpleStorage) directly !
+	from brownie import accounts, SimpleStorage
+
+	# Select an account to work with
+	def deploy_simple_storage():
+		account = accounts[0] # the first account in the local ganache chain
+		simple_storage = SimpleStorage.deploy({"from":account})
+		print(simple_storage) # a contract object deployed from the account "account"
+
+	# The function to be executed 
+	def main():
+		deploy_simple_storage()
+
+- As we can see, we don't need to specify the many things we specified when we used ``web3.py``. Plus, Brownie undertands directly whether the function we will execute is a ``transact`` function (that makes a state change to the blockchain) or a ``call`` function.
+
+- The ``{"from":account}`` is only needed when a function that we are using is a transact function.
+
+- Now we will redo exactly what we did using ``web3.py`` in **brownie**. 
+
+.. code-block:: python
+
+	from brownie import accounts, SimpleStorage
+
+	def deploy_simple_storage():
+		account = accounts[0]
+		simple_storage = SimpleStorage.deploy({"from":account})
+		stored_value = simple_storage.retrieve()
+		print("Retrieve function call: value = ", stored_value)
+
+		transaction = simple_storage.store(15, {"from":account})
+		transaction.wait(1)
+		stored_value_update = simple_storage.retrieve()
+		print("Retrieve function call: value = ", stored_value_update)
+
+	# The function to be executed 
+	def main():
+		deploy_simple_storage()
+
+- As we can see, we can use the created ``simple_storage`` (contract) variable directly. the functions defined in the solidity smart contract are just methods wrt the ``simple_storage`` variable. 
+
+- ``transaction.wait(1)`` => Waiting for 1 block confirmation. 
+
+.. Note:: 
+
+	**What are block confirmations ?**
+	- The act of a transaction being included on a block on the blockchain.
+
+Testing contracts response with Brownie
+----------------------------------------
+
+- Learning how to test smart contracts and automating tests is crucial to becoming a good smart contract developper.
+
+- **Brownie** offers the possibility to write tests directly in the `tests` folder that is initialized with the rest of the project's folders.
+
+- When we create a test script, it should be in the test folder and should always begin with `test_`.
+
+
+- The setup that we use for testing is as follwing:
+	- Arranging: Setting up all the pieces that we need.
+	- Acting: Deploy the smart contract and make some function calls and define the expectations (It's better to make unit tests instead of testing everything in the same script... We'll come back later to unit testing).
+	- Asserting: Compare the expectation with the the actual value to be outputted.
+
+**Example:**
+
+.. code-block:: python
+
+	from brownie import SimpleStorage, accounts
+
+	def test_deploy_simple_storage():
+		
+		# Arrange
+		account = accounts[0]
+
+		# Act
+		simple_storage = SimpleStorage.deploy({"from": account})
+		starting_value = simple_storage.retrieve()
+		expected = 0
+		# Assert
+		assert starting_value == expected
+
+
+- Let's now try to test updating the simple_storage contract.
+
+.. code-block:: python
+
+	from brownie import SimpleStorage, accounts
+
+	def test_deploy_simple_storage():
+		
+		# Arrange
+		account = accounts[0]
+
+		# Act
+		simple_storage = SimpleStorage.deploy({"from": account})
+		starting_value = simple_storage.retrieve()
+		expected = 0
+
+		# Assert
+		assert starting_value == expected
+
+
+	def main():
+		test_deploy_simple_storage()
+
+
+	def test_update_simple_storage():
+		
+		# Arrange
+		account = accounts[0]
+
+		# Act
+		simple_storage = SimpleStorage.deploy({"from":account})
+		simple_storage.store(15, {"from":account})
+		expected = 15
+		
+		# Assert
+		assert expected == simple_storage.retrieve()
+
+- When we run ``brownie test tests/test_simple_storage.py``, it will test all the functions that begin with ``test_``. There are a couple of keyboard shortcuts from some specific tasks:
+
+	- We can test only specific functions with ``-k`` flag: 
+		** Example:``brownie test -k test_update_simple_storage``
+
+	- We can use the ``--pdb`` flag if we want to open a python shell to interact with the script and change variables etc.. to debug the script. 
+
+	- When we have more than one function test, we cannot know which of them has successfully been tested and those who weren't. In this case, we can use ``-s`` if we want to be more robust: ``brownie test -s``. This will show us each function test result.
+
+- All the flags and tools that are useful for testing come from ``pytest``. Hence, we can use its flags and tools in brownie easily.
+
+Deploying to a testnet with Brownie
+------------------------------------
+
+- Brownie comes packaged with a list of networks that is compatible with. We can list all these nets by running:  ``brownie networks list``. A minimal list of networks that is provided by brownie is below:
+
+.. code-block:: json
+
+	Ethereum
+	  ├─Mainnet (Infura): mainnet
+	  ├─Ropsten (Infura): ropsten
+	  ├─Rinkeby (Infura): rinkeby
+	  ├─Goerli (Infura): goerli
+	  └─Kovan (Infura): kovan
+
+	Ethereum Classic
+	  ├─Mainnet: etc
+	  └─Kotti: kotti
+
+	Arbitrum
+	  └─Mainnet: arbitrum-main
+
+	Avalanche
+	  ├─Mainnet: avax-main
+	  └─Testnet: avax-test
+
+	Aurora
+	  ├─Mainnet: aurora-main
+	  └─Testnet: aurora-test
+
+	Binance Smart Chain
+	  ├─Testnet: bsc-test
+	  └─Mainnet: bsc-main
+
+	Fantom Opera
+	  ├─Testnet: ftm-test
+	  └─Mainnet: ftm-main
+
+	Harmony
+	  └─Mainnet (Shard 0): harmony-main
+
+	Moonbeam
+	  └─Mainnet: moonbeam-main
+
+	Optimistic Ethereum
+	  ├─Mainnet: optimism-main
+	  └─Kovan: optimism-test
+
+	Polygon
+	  ├─Mainnet (Infura): polygon-main
+	  └─Mumbai Testnet (Infura): polygon-test
+
+	XDai
+	  ├─Mainnet: xdai-main
+	  └─Testnet: xdai-test
+
+	Development
+	  ├─Ganache-CLI: development
+	  ├─Geth Dev: geth-dev
+	  ├─Hardhat: hardhat
+	  ├─Hardhat (Mainnet Fork): hardhat-fork
+	  ├─Ganache-CLI (Mainnet Fork): mainnet-fork
+	  ├─Ganache-CLI (BSC-Mainnet Fork): bsc-main-fork
+	  ├─Ganache-CLI (FTM-Mainnet Fork): ftm-main-fork
+	  ├─Ganache-CLI (Polygon-Mainnet Fork): polygon-main-fork
+	  ├─Ganache-CLI (XDai-Mainnet Fork): xdai-main-fork
+	  ├─Ganache-CLI (Avax-Mainnet Fork): avax-main-fork
+	  └─Ganache-CLI (Aurora-Mainnet Fork): aurora-main-fork
+
+- We can see that brownie already comes with different networks, the last set of nets is for development nets. BY default, when we run our scripts without specifying a specific account, brownie spins up a ganache-cli development network. But we can see that there are many other development networks that we can use. 
+
+- Development networks are temporary networks, that is, the contracts and transactions sent on these blockchains are deleted after our script completes.
+
+- Ethereum networks for example (Mainnet, rinkeby, kovan etc....) are persistent networks. So, brownie will keep track of anything that happens when we use a persistent network.
+
+- If we want to work with a mainnet or a testnet (Rinkeby for example). We have to call a third-party client to run a blockchain for us like Infura or Alchemy... In this example, we will use infura. In this case, we'll have to provide the account Private key and the Project ID. 
+
+- The private key is stored for example in the ``.env`` file, but the Project ID must be passed to the ``.env`` file in the follwing way:
+
+.. code-block:: bash
+
+	WEB3_INFURA_PROJECT_ID = "652sdfdfsdfv6d2ds3..."
+
+
+- The following is a code-snippet for implementing a deployment to a testnet. We have created a function ``get_account()`` to easily switch between the ganache-cli and the rinkeby testnet we're gonna be using.
+
+- To run this script with the rinkeby testnet, we should specify the netowrk when we run brownie: 
+
+	- Example: ``brownie run scripts/deploy.py --network rinkeby``
+
+.. code-block:: python
+
+	# import accounts module
+	from brownie import accounts, SimpleStorage, network, config
+
+	def get_account():
+
+		if (network.show_active() == "development"):
+			print("development network ON !")
+			return accounts[0]
+
+		else:
+			print("This is a TestNet !")
+			return accounts.add(config["wallets"]["from_key"])
+
+
+	# Deploy
+	def deploy_simple_storage():
+		account = get_account()
+		simple_storage = SimpleStorage.deploy({"from":account})
+		stored_value = simple_storage.retrieve()
+		print("Retrieve function call: value = ", stored_value)
+
+		transaction = simple_storage.store(15, {"from":account})
+		transaction.wait(1)
+		stored_value_update = simple_storage.retrieve()
+		print("Retrieve function call: value = ", stored_value_update)
+
+	# The function to be executed 
+	def main():
+		deploy_simple_storage()
+
+- Once we deploy to our blockchain, the deployments folder in our build directory will have a new deployment folder (The name of the folder is equal to the network_id, in the case of Rinkeby, it is 4).
+
+- The deployments folder keeps track of deployments on testnets and mainents.
+
+
+- We can now interact with our deployed contract easily. Let's define a simple function that will read from our contract.
+
+**scripts/read_value.py**
+
+.. code-block:: python
+
+	from brownie import SimpleStorage, accounts, config
+
+	def read_contract():
+		
+		# Get the "first" deployed contract.
+		simple_Storage = SimpleStorage[0]
+
+		# Brownie automatically knows what the ABI is 
+		# and what the address of the contract is 
+		# => We can directly call the functions that 
+		# we need from the contract now.
+
+		print(simple_storage.retrieve())
+
+	def main():
+		read_contract()
+
+- Now we might want to interact very often with contracts, and running scripts this way can slow us down a bit. Brownie has another feature which is ``brownie console``. Brownie will kick us off to a console where a gnache-cli is active and where all the contracts and everything are already imported (This means that all the imports in the files that are under the **scripts** folder are imported to the console and can be used).

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Purpose of smart contracts &mdash; Chainlink hackathon Spring 2022 notes 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Purpose of smart contracts" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Chainlink hackathon Spring 2022 notes
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Purpose of smart contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#purpose-of-chainlink">Purpose of Chainlink</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#reminder-about-blockchains">Reminder about blockchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#solving-the-oracle-problem-with-chainlink">Solving the oracle problem with Chainlink</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reaching-consensus">Reaching consensus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hybrid-smart-contracts">Hybrid smart contracts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chainlink-data-feeds-and-use-cases">Chainlink data feeds and use cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chainlink-vrf">Chainlink VRF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chainlink-keepers">Chainlink keepers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chainlink-anyapi-and-market">Chainlink AnyAPI and Market</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#demo">Demo</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Chainlink hackathon Spring 2022 notes</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Purpose of smart contracts</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Day_2.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="purpose-of-smart-contracts">
+<h1>Purpose of smart contracts<a class="headerlink" href="#purpose-of-smart-contracts" title="Permalink to this headline"></a></h1>
+<ul>
+<li><dl class="simple">
+<dt>Smart contracts are</dt><dd><ul class="simple">
+<li><p>trust minimized agreements.</p></li>
+<li><p>Unbreakable promises thanks to decentralization.</p></li>
+<li><p>Superior digital agreements.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>In all our agreements today, we have this issues of trust and promises (services like bankds, lottery etc…).</p></li>
+<li><p>Examples of parties that broke their promises:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>McDonald monopoly game to win 1M$ (No one won..)</p></li>
+<li><p>Robinhood exchange stops users from trading GameStop stocks.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Smart contracts will solve Solciety’s critical trust issues</strong>
+- What smart contracts do is that they move us away from this paper guarantees (brand based world) where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Counterparty risk is high and opaque.</p></li>
+<li><p>Transparency is purposefully removed.</p></li>
+<li><p>Interest yields are low and going lower.</p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt>to a world where we have CryptoGraphic guanrantees (Math based) where:</dt><dd><ul class="simple">
+<li><p>Counterparty risk is low and transparent</p></li>
+<li><p>Transparency is unavoidably built-in</p></li>
+<li><p>interest yields are consistently high</p></li>
+</ul>
+</dd>
+</dl>
+<p>Smart contracts replaces trust by mathematical truth.</p>
+<p><em>Counterparty risk: The likelihood that one of those involved in a transaction might default on its contractual obligation</em></p>
+</div>
+</section>
+<section id="purpose-of-chainlink">
+<h1>Purpose of Chainlink<a class="headerlink" href="#purpose-of-chainlink" title="Permalink to this headline"></a></h1>
+<section id="reminder-about-blockchains">
+<h2>Reminder about blockchains<a class="headerlink" href="#reminder-about-blockchains" title="Permalink to this headline"></a></h2>
+<ul>
+<li><p>Blockchains are deterministic systems and this means that they cannot connect ot the outside world natively. <strong>Why? = Consensus</strong></p></li>
+<li><p><strong>What is consensus ?</strong>: Blockchains are comprised of many nodes all around the globe and they have to agree on every calculation that they run and on the state of the blockchain, i.e. They have to reach consensus on what the state of the blockchain is.</p></li>
+<li><p>In order for blockchains to have more real world applications, it has to collect and use real world data. However, when a blockchain start interacting with an external API, it’s no longer deterministic.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Why is it no longer deterministic ?: Let’s say for example that we need to to perform a simple calculation (1 + 1 = 2). It’s easy for all the nodes (let’s say there are 3 nodes in the blockchain) to agree on that and hence reaching consensus. Let’s take now another example where the blockchain is connected to an external API (a data source outside of the system). Let’s say that this API is providing ETH/USD conversion rate data. Cryptocurrency prices may be volatile, so let’s say that a certain node among the three other nodes sends a request to the API to get the ETH/USD conversion rate and it finds that 1ETH = 2000USD, this is a blockchain state change, a couple of seconds later, the second node in the blockchain wants to agree on the state of the blockchain and sends a request to the API as well and we find that the ETH price is 2000.1USD. The two informations are different and hence we cannot reach consensus on the state of the blockchain.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Smart contracts and blockchain are hence deterministic systems that cannot connect to real world data natively. This is the oracle problem… The oracle problem is just the smart contract connectivity problem.</p></li>
+</ul>
+</section>
+<section id="solving-the-oracle-problem-with-chainlink">
+<h2>Solving the oracle problem with Chainlink<a class="headerlink" href="#solving-the-oracle-problem-with-chainlink" title="Permalink to this headline"></a></h2>
+<ul>
+<li><p>Chainlink is a protocol for building decentralized oracle networks.</p></li>
+<li><p>In this context, an oracle is a middleware that relates information about the real world into blockchains and smart contracts and relays info about blockchains and smart contracts back to the real world.</p></li>
+<li><p>There are two types of possible oracle networks, centralized oracle networks and decentralized oracle networks. If we want to get for example data about the ETH/USD conversion, we can simple use an external API to do this for us. However, this establishes what we call <strong>a single point of failure</strong>, that is, if an oracle provides false data to the smart contract and the smart contract executes based on that data, we have ourselves an “oracle problem”. <strong>A centralized node defeats the whole purpose of decentralization that blockchains offer</strong>. As it has been said in the chainlink whitepaper:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>“The security of any system is only as strong as its weakest link, so a highly trustworthy oracle is required to preserve the trustworthiness of a well-engineered blockchain.”</strong></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><strong>The solution is a decentralized oracle network: ChainLink</strong>: Chainlink is a protocol for building modular decentralized oracle networks for whatever kind of data maybe needed for smart contracts. We can hence bring data in or trigger external computation in a decentralized way. This extends the decentralization and trust-minimization of smart contracts out to the data-delivery and data source layer.</p></li>
+<li><p>DONs (Decentralized Oracle Networks) can be built with many or few nodes as needed.</p></li>
+</ul>
+</div>
+</section>
+<section id="reaching-consensus">
+<h2>Reaching consensus<a class="headerlink" href="#reaching-consensus" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>DONs can have their own form of consensus. This is called aggregation.</p></li>
+<li><p>Let’s take an example where we need to get live Tesla stocks price data into a blockchain. Each node in the DON will get data on what the tesla price might be at a given time (That can be different from one node to another) but in the end, all of this is <strong>aggregated</strong> into a single datapoint, a single source of truth of what the price of the asset actually is which is passed to the blockchain or the smart contract.</p></li>
+</ul>
+</section>
+<section id="hybrid-smart-contracts">
+<h2>Hybrid smart contracts<a class="headerlink" href="#hybrid-smart-contracts" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>By combining on chain contract code with off-chain ressources through oracles, we have a new type of smart contract called <strong>Hybrid smart contracts</strong>.</p></li>
+<li><p><strong>Hybrid smart contracts</strong> rely on existing on-chain code and combine it with off-chain components like data and computation and they bring the true original vision of smart contract to life.</p></li>
+</ul>
+</section>
+<section id="chainlink-data-feeds-and-use-cases">
+<h2>Chainlink data feeds and use cases<a class="headerlink" href="#chainlink-data-feeds-and-use-cases" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Chainlink data feeds are pre-built DONs that are already gone through all the battle testing aand have a history and reputation of delivering secure and high quality data to blockchains for us to us for our smart contracts.</p></li>
+<li><p>DeFi, or Decentralized Fincance, is the most popular use case for DONs built with chainlink (Ex. Hybrid smart contracts).</p></li>
+<li><p>DeFi takes traditional financial apps such as <em>borrowing</em>, <em>lending</em> and exchange of currencies etc.. and makes them decentralized smart contract applications (DApps). In order for these DeFi smart contracts to operate effectively, they all need to get price data of assets whether that is of cryptocurrenices themselves or stocks or whatever, and this is where <strong>reference contracts</strong> come into play.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Reference contracts are smart contracts that DONs deliver decentralized data to so you can reference these “reference SC” to get this price data into your own smart contracts. and these can really be considered sources of truth for various currency pairs.</p></li>
+</ul>
+</div>
+<ul class="simple">
+<li><p>If we look at the diagram, on the left, we have <strong>exchanges</strong>, then we have <strong>data providers</strong> that are aggregating the price data from these exchanges, and then we have the <strong>chainlink nodes</strong>. Each one of the nodes can connect to multiple data providers, (and even the exchanges directly) to aggregate the price data for these price pairs at the node level. So, each node aggregates the price data individually and then communicate with each other as discussed previously and all of this is put on-chain with the reference smart contracts.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt><strong>What if we have only one source of data ? (Goverment for example).</strong></dt><dd><ul class="simple">
+<li><p>In such a case, the source of data will become the source of truth for that data unfortuannatly. One can work on creating decentralized data sources for that source of data but either way we want the delivery layer of that data to be decentralized. Perhaps the source data is still centralized but we don’t want a centralized source of data + a centralized data delivery to a decentralized blockchain. At least, with the decentralized oracle network in between, we can be assured that the data delivery layer can’t be compromised and the only thing we will have to worry about is the centralized data source.</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<ul class="simple">
+<li><p>Example: Check Chainlink Data feeds at: <a class="reference external" href="https://data.chain.link">https://data.chain.link</a> (ETH/USD for example).</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt><strong>Chainlink data feeds particularities</strong></dt><dd><ul class="simple">
+<li><p>Chainlink datafeeds covers both decentralized and centralized exchanges.</p></li>
+<li><p>They can use techniques like volume based average method of aggregating data. That is, if we have for example an asset that is basically all traded on coinbase for example or binance, one really wants to wait price data coming from that exchange heavily because that’s basically where all the price discovery is coming from.</p></li>
+<li><p>The feeds are live on multiple blockchains.</p></li>
+<li><p>Most feeds use off-chain reporting (OCR).</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt><strong>What is OCR</strong></dt><dd><ul class="simple">
+<li><p>Each node of the DON is communicating with each other over a P2P network much like blockchains nodes do.</p></li>
+<li><p>Each node aggregates their own price data, signs the final value, they deem to be the actual price of the asset.</p></li>
+<li><p>This report is passed around between all the nodes.</p></li>
+<li><p>A single node is elected as leader and posts the full report with all of the signed data transactions from each of the nodes on-chain. This reduce gas costs to 90%.</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Most DONs use the median value for price data. That is, the price of an asset is the median of the expected price delivered by each DON. This however can be customized if necessary.</p></li>
+<li><p>The average is not a very good choice to use in DONs because it is susceptible to outliers moving that average out. The median is more secure.</p></li>
+</ul>
+</div>
+</section>
+<section id="chainlink-vrf">
+<h2>Chainlink VRF<a class="headerlink" href="#chainlink-vrf" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>This is an abbreviation of Chainlink <a href="#id1"><span class="problematic" id="id2">**</span></a>V**erifiable <a href="#id3"><span class="problematic" id="id4">**</span></a>R**andomness <a href="#id5"><span class="problematic" id="id6">**</span></a>F**unction.</p></li>
+<li><p>Due to the deterministic nature of blockchains, they are, along with smart contracts, bad at generating randomness (determinism is the opposite of randomness.. ).</p></li>
+<li><p>Even if we are able to find ways to incorportate randomness into our smart contracts and blockchains, this generated “on-chain” randomness can be easily biased by miners; Everytihng on-chain has to be deterministic by the nature of blockchains and hence, miners can predict what the randomness would be and that’s how they can bias the randomness in their favor.</p></li>
+<li><p>What chainlink VRF does is that it provides a random number alongside a cryptographic proof that the number was indeed random. The cryptographic proof and the random number are both verified on-chain in a smart contract.</p></li>
+<li><p>The chainlink VRF hence provides a provably random and secure randomness to smart contracts.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt>** Why is this important ?**</dt><dd><ul class="simple">
+<li><p>VRF allows provably fair outcomes where we need fair randomness like in lottery games for example.</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+<section id="chainlink-keepers">
+<h2>Chainlink keepers<a class="headerlink" href="#chainlink-keepers" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p><em>Chainlink Keepers enables smart contracts to automate key functions and event-driven tasks in a highly reliable, decentralized, and cost-efficient manner.</em> They are basically Chainlink nodes that call functions of your smart contract on your behalf. They do not compete with each other, rather, they take turns in executing the upkeeps.</p></li>
+</ul>
+</section>
+<section id="chainlink-anyapi-and-market">
+<h2>Chainlink AnyAPI and Market<a class="headerlink" href="#chainlink-anyapi-and-market" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Chainlink provides a way to connect your smart contract to any API.</p></li>
+<li><p>This is however not recommened for production put can be great for testing out a proof of concept.</p></li>
+<li><p>Chainlink has this chainlink market where we can, for any API, find a bunch of nodes that are listing their services and the jobs that they run.</p></li>
+</ul>
+</section>
+<section id="demo">
+<h2>Demo<a class="headerlink" href="#demo" title="Permalink to this headline"></a></h2>
+<p>** GOALS **</p>
+<ul class="simple">
+<li><p>Get used to using the chainlink docs (so important). <a class="reference external" href="http://docs.chain.link">http://docs.chain.link</a></p></li>
+<li><p>Build a smart contract using data feeds and deploy and interact with these contracts on-chain.</p></li>
+</ul>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.8.7</span><span class="p">;</span><span class="w"></span>
+
+<span class="kt">import</span><span class="w"> </span><span class="s2">&quot;@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol&quot;</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">PriceConsumerV3</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span>AggregatorV3Interface<span class="w"> </span><span class="kt">internal</span><span class="w"> </span>priceFeed<span class="p">;</span><span class="w"></span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Network: Kovan</span>
+<span class="cm">         * Aggregator: ETH/USD</span>
+<span class="cm">         * Address: 0x9326BFA02ADD2366b30bacB125260Af641031331</span>
+<span class="cm">         */</span><span class="w"></span>
+<span class="w">        </span><span class="kt">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span>priceFeed<span class="w"> </span><span class="o">=</span><span class="w"> </span>AggregatorV3Interface<span class="p">(</span><span class="mh">0x9326BFA02ADD2366b30bacB125260Af641031331</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Returns the latest price</span>
+<span class="cm">         */</span><span class="w"></span>
+<span class="w">        </span><span class="kt">function</span><span class="w"> </span><span class="nv">getLatestPrice</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="p">(</span><span class="w"></span>
+<span class="w">                </span><span class="cm">/*uint80 roundID*/</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="nv">price</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="cm">/*uint startedAt*/</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="cm">/*uint timeStamp*/</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="cm">/*uint80 answeredInRound*/</span><span class="w"></span>
+<span class="w">            </span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>priceFeed<span class="p">.</span>latestRoundData<span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="kt">return</span><span class="w"> </span>price<span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>This contract is using datafeeds through the import of chainlink’s aggregatorV3Interface.sol. With that single import, the contract is able to use datafeeds.</p></li>
+<li><p>The contract have a constructor that sets and points to the datafeed we want. In this particular case, it points to the ETH/USD datafeed that’s live on the Kovan ethereum testnet at the specified address.</p></li>
+<li><p>Additionally, we have a single function that gets the latest price, that is the conversion rate ETH/USD.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Purpose of smart contracts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Mouloud Bahae-eddine.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
